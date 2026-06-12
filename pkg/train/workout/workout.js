@@ -171,12 +171,11 @@ Page({
 
   onTick(e) {
     this.setData({ duration: e.detail.seconds });
-    // Session 模式下，每 5 秒回写一次累计时长到 globalData，防止页面重定向丢失
+    // Session 模式下，每次都回写累计时长到 globalData，防止页面重定向丢失
     if (this.data.isPlanMode && this.data.sessionTotal > 0) {
-      var s = e.detail.seconds || 0;
-      if (s % 5 === 0) {
-        var app = getApp();
-        if (app && app.globalData) app.globalData.sessionElapsed = s;
+      var app = getApp();
+      if (app && app.globalData) {
+        app.globalData.sessionElapsed = e.detail.seconds || 0;
       }
     }
   },
