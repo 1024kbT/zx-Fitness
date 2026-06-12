@@ -1,0 +1,135 @@
+<view class="page" style="padding-top: {{navBarHeight + 12}}px;">
+  <view class="header">
+    <view class="header__title">自定义动作</view>
+    <view class="header__desc">添加专属训练动作</view>
+  </view>
+
+  <view class="add-btn" bindtap="onShowForm">
+    <text class="add-btn__icon">＋</text>
+    <text class="add-btn__text">新增自定义动作</text>
+  </view>
+
+  <view class="list">
+    <view class="item card" wx:for="{{list}}" wx:key="id">
+      <view class="item__body" bindtap="onEdit" data-item="{{item}}">
+        <view class="item__name">{{item.name}}</view>
+        <view class="item__meta">
+          <text class="tag">{{item.level}}</text>
+          <text class="item__sub">{{item.equipment}} · {{item.primary_muscle || '未设置'}}</text>
+        </view>
+        <view class="item__target">
+          {{item.default_sets}}组 × {{item.type === 'time' ? item.default_seconds + 's' : item.default_reps + '次'}}
+          · 休息{{item.rest_seconds}}s
+        </view>
+      </view>
+      <view class="item__del" bindtap="onDelete" data-id="{{item.id}}">删除</view>
+    </view>
+    <view wx:if="{{list.length === 0}}" class="empty">
+      <view class="empty__icon">✨</view>
+      <view class="empty__text">暂无自定义动作</view>
+      <view class="empty__hint">点击顶部按钮添加你的第一个动作</view>
+    </view>
+  </view>
+
+  <!-- 表单遮罩 -->
+  <view class="form-mask" wx:if="{{showForm}}" bindtap="onCloseForm" catchtouchmove="noop">
+    <view class="form card" catchtap="noop">
+      <view class="form__title">{{editing ? '编辑动作' : '新增动作'}}</view>
+
+      <scroll-view scroll-y class="form__scroll">
+        <view class="field">
+          <view class="field__label">动作名称 *</view>
+          <input class="field__input" placeholder="例如：上斜史密斯推胸" placeholder-class="ph" value="{{form.name}}" data-k="name" bindinput="onInput" />
+        </view>
+        <view class="field">
+          <view class="field__label">英文名（可选）</view>
+          <input class="field__input" placeholder="Incline Smith Press" placeholder-class="ph" value="{{form.name_en}}" data-k="name_en" bindinput="onInput" />
+        </view>
+
+        <view class="field">
+          <view class="field__label">肌群分类</view>
+          <picker range="{{categories}}" range-key="name" value="{{categoryIndex}}" bindchange="onPickCategory">
+            <view class="field__picker">{{categoryName}} ›</view>
+          </picker>
+        </view>
+
+        <view class="field">
+          <view class="field__label">难度等级</view>
+          <picker range="{{levels}}" value="{{levelIndex}}" bindchange="onPickLevel">
+            <view class="field__picker">{{form.level}} ›</view>
+          </picker>
+        </view>
+
+        <view class="field">
+          <view class="field__label">器械</view>
+          <picker range="{{equipment}}" value="{{equipIndex}}" bindchange="onPickEquip">
+            <view class="field__picker">{{form.equipment}} ›</view>
+          </picker>
+        </view>
+
+        <view class="field">
+          <view class="field__label">主要肌群</view>
+          <input class="field__input" placeholder="例如：胸大肌上束" placeholder-class="ph" value="{{form.primary_muscle}}" data-k="primary_muscle" bindinput="onInput" />
+        </view>
+
+        <view class="field">
+          <view class="field__label">辅助肌群（可选）</view>
+          <input class="field__input" placeholder="例如：三角肌前束" placeholder-class="ph" value="{{form.secondary_muscle}}" data-k="secondary_muscle" bindinput="onInput" />
+        </view>
+
+        <view class="field">
+          <view class="field__label">计数方式</view>
+          <picker range="{{types}}" value="{{typeIndex}}" bindchange="onPickType">
+            <view class="field__picker">{{form.type === 'reps' ? '按次数' : '按时间'}} ›</view>
+          </picker>
+        </view>
+
+        <view class="stepper">
+          <view class="stepper__label">默认组数</view>
+          <view class="stepper__row">
+            <view class="stepper__btn" data-k="default_sets" data-d="-1" bindtap="onStep">−</view>
+            <view class="stepper__value">{{form.default_sets}}</view>
+            <view class="stepper__btn" data-k="default_sets" data-d="1" bindtap="onStep">+</view>
+          </view>
+        </view>
+
+        <view class="stepper" wx:if="{{form.type === 'reps'}}">
+          <view class="stepper__label">每组次数</view>
+          <view class="stepper__row">
+            <view class="stepper__btn" data-k="default_reps" data-d="-1" bindtap="onStep">−</view>
+            <view class="stepper__value">{{form.default_reps}}</view>
+            <view class="stepper__btn" data-k="default_reps" data-d="1" bindtap="onStep">+</view>
+          </view>
+        </view>
+
+        <view class="stepper" wx:if="{{form.type === 'time'}}">
+          <view class="stepper__label">每组秒数</view>
+          <view class="stepper__row">
+            <view class="stepper__btn" data-k="default_seconds" data-d="-5" bindtap="onStep">−</view>
+            <view class="stepper__value">{{form.default_seconds}}s</view>
+            <view class="stepper__btn" data-k="default_seconds" data-d="5" bindtap="onStep">+</view>
+          </view>
+        </view>
+
+        <view class="stepper">
+          <view class="stepper__label">组间休息（秒）</view>
+          <view class="stepper__row">
+            <view class="stepper__btn" data-k="rest_seconds" data-d="-15" bindtap="onStep">−</view>
+            <view class="stepper__value">{{form.rest_seconds}}s</view>
+            <view class="stepper__btn" data-k="rest_seconds" data-d="15" bindtap="onStep">+</view>
+          </view>
+        </view>
+
+        <view class="field">
+          <view class="field__label">动作要领（一行一条，可选）</view>
+          <textarea class="field__textarea" placeholder="起始姿势...&#10;发力推起...&#10;控制下放..." value="{{form.instructions}}" data-k="instructions" bindinput="onInput" />
+        </view>
+      </scroll-view>
+
+      <view class="form__actions">
+        <view class="form__btn form__btn--cancel" bindtap="onCloseForm">取消</view>
+        <view class="form__btn form__btn--ok" bindtap="onSave">保存</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,178 @@
+<view class="page-v2">
+  <topbar title="身体数据" icon="📊" />
+
+  <!-- 身体指标 4 卡 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <view>
+        <text class="section-v2__title">身体指标</text>
+        <text class="section-v2__sub">见证身体的改变</text>
+      </view>
+    </view>
+    <view class="body-metrics">
+      <view class="body-metric">
+        <text class="body-metric__label">当前体重</text>
+        <view class="body-metric__value">
+          <text class="body-metric__num">{{currentWeight || '--'}}</text>
+          <text class="body-metric__unit">kg</text>
+        </view>
+        <view class="body-metric__delta body-metric__delta--{{weightDeltaClass}}">
+          <text wx:if="{{weightDelta !== 0}}">~ {{weightDeltaText}} kg</text>
+          <text wx:else>持平</text>
+        </view>
+      </view>
+      <view class="body-metric">
+        <text class="body-metric__label">体脂率</text>
+        <view class="body-metric__value">
+          <text class="body-metric__num">{{bodyFat || '--'}}</text>
+          <text class="body-metric__unit">%</text>
+        </view>
+        <view class="body-metric__delta body-metric__delta--down">
+          <text wx:if="{{bodyFatDelta}}">~ {{bodyFatDelta}} %</text>
+          <text wx:else>待记录</text>
+        </view>
+      </view>
+      <view class="body-metric">
+        <text class="body-metric__label">肌肉量</text>
+        <view class="body-metric__value">
+          <text class="body-metric__num">{{muscleMass || '--'}}</text>
+          <text class="body-metric__unit">kg</text>
+        </view>
+        <view class="body-metric__delta body-metric__delta--up">
+          <text wx:if="{{muscleDelta}}">~ +{{muscleDelta}} kg</text>
+          <text wx:else>待记录</text>
+        </view>
+      </view>
+      <view class="body-metric">
+        <text class="body-metric__label">BMI</text>
+        <view class="body-metric__value">
+          <text class="body-metric__num">{{bmi || '--'}}</text>
+        </view>
+        <view class="body-metric__delta body-metric__delta--down">
+          <text wx:if="{{bmiDelta}}">~ {{bmiDelta}}</text>
+          <text wx:else>待记录</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 体重趋势（6 个月） -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">体重趋势（近 6 个月）</text>
+    </view>
+    <view class="card-v2">
+      <line-chart
+        wx:if="{{chartData.length > 0}}"
+        labels="{{chartLabels}}"
+        values="{{chartValues}}"
+        width="{{670}}"
+        height="{{320}}"
+        line-color="#80FF00"
+        y-ticks="{{[75.6, 77.6, 79.5]}}"
+        fill-area="{{true}}"
+        show-dot="{{true}}"
+      />
+      <empty-state
+        wx:else
+        icon="📈"
+        title="还没有体重数据"
+        subtitle="在下方记录你的体重，见证变化"
+      />
+    </view>
+  </view>
+
+  <!-- 体脂率 vs 肌肉量（双线图表） -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">体脂率 vs 肌肉量</text>
+    </view>
+    <view class="card-v2">
+      <line-chart
+        wx:if="{{bodyCompSeries.length > 0}}"
+        labels="{{bodyCompLabels}}"
+        series="{{bodyCompSeries}}"
+        width="{{670}}"
+        height="{{320}}"
+        y-ticks="{{[0, 20, 40, 60, 80]}}"
+        fill-area="{{false}}"
+        show-dot="{{true}}"
+      />
+      <empty-state
+        wx:else
+        icon="📉"
+        title="待记录"
+        subtitle="在「我的」页录入体脂和肌肉量，查看变化趋势"
+      />
+    </view>
+  </view>
+
+  <!-- 身体围度 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">身体围度</text>
+    </view>
+    <view class="girth-grid">
+      <view class="girth-card">
+        <text class="girth-card__label">胸围</text>
+        <text class="girth-card__num">{{chest || '--'}}</text>
+        <text class="girth-card__unit">cm</text>
+      </view>
+      <view class="girth-card">
+        <text class="girth-card__label">腰围</text>
+        <text class="girth-card__num">{{currentWaist || '--'}}</text>
+        <text class="girth-card__unit">cm</text>
+      </view>
+      <view class="girth-card">
+        <text class="girth-card__label">臀围</text>
+        <text class="girth-card__num">{{hip || '--'}}</text>
+        <text class="girth-card__unit">cm</text>
+      </view>
+      <view class="girth-card">
+        <text class="girth-card__label">大腿围</text>
+        <text class="girth-card__num">{{thigh || '--'}}</text>
+        <text class="girth-card__unit">cm</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 录入 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">记录新数据</text>
+    </view>
+    <view class="record-form">
+      <view class="form-row">
+        <view class="form-field">
+          <text class="form-field__label">日期</text>
+          <picker mode="date" value="{{inputDate}}" bindchange="onPickDate">
+            <view class="form-field__input">{{inputDate}} ›</view>
+          </picker>
+        </view>
+        <view class="form-field">
+          <text class="form-field__label">体重 (kg)</text>
+          <input
+            class="form-field__input"
+            type="digit"
+            placeholder="如 70.5"
+            value="{{inputWeight}}"
+            bindinput="onInputWeight"
+          />
+        </view>
+        <view class="form-field">
+          <text class="form-field__label">腰围 (cm)</text>
+          <input
+            class="form-field__input"
+            type="digit"
+            placeholder="如 80"
+            value="{{inputWaist}}"
+            bindinput="onInputWaist"
+          />
+        </view>
+      </view>
+      <view class="btn-v2" style="width: 88%; margin-top: 36rpx;" bindtap="onSubmit">
+        <text>保存记录</text>
+      </view>
+    </view>
+  </view>
+</view>

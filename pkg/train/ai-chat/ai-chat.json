@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "AI 训练助手",
+  "navigationBarBackgroundColor": "#0a0e17",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0a0e17",
+  "backgroundTextStyle": "dark",
+  "usingComponents": {}
+}

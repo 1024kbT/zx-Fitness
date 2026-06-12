@@ -1,0 +1,184 @@
+/* ===== 运动记录 ===== */
+
+.rec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8rpx 4rpx 24rpx;
+}
+.rec-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+.rec-header__logo {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 18rpx;
+  background: rgba(128, 255, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+.rec-header__title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  letter-spacing: 0.5rpx;
+}
+
+/* 复用 dashboard 的 header__bell */
+.header__bell {
+  position: relative;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: var(--bg-card-v2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.header__bell-icon { font-size: 32rpx; }
+.header__bell:active { background: var(--bg-elevated); }
+
+/* 统计 3 列 */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16rpx;
+}
+.stat-card {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 22rpx 18rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.stat-card__label {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.stat-card__value {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+.stat-card__num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -1rpx;
+}
+.stat-card__num--accent { color: var(--accent-v2); }
+.stat-card__unit {
+  font-size: 18rpx;
+  color: var(--text-v2);
+  font-weight: 400;
+}
+
+/* 记录列表 */
+.rec-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.rec-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 22rpx;
+}
+.rec-item__icon {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  background: rgba(128, 255, 0, 0.12);
+  flex-shrink: 0;
+}
+.rec-item__icon--cardio {
+  background: rgba(33, 150, 243, 0.15);
+}
+.rec-item__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.rec-item__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12rpx;
+}
+.rec-item__name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-v1);
+  letter-spacing: 0.3rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rec-item__time {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.rec-item__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12rpx;
+}
+.rec-item__meta {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rec-item__cal {
+  display: flex;
+  align-items: baseline;
+  gap: 3rpx;
+  flex-shrink: 0;
+}
+.rec-item__cal-num {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--accent-v2);
+  font-variant-numeric: tabular-nums;
+}
+.rec-item__cal-unit {
+  font-size: 18rpx;
+  color: var(--text-v2);
+}
+.rec-item__del {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: rgba(255, 122, 46, 0.1);
+  color: var(--danger);
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+.rec-item__del:active { background: rgba(255, 122, 46, 0.25); }

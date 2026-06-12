@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "身体数据",
+  "navigationBarBackgroundColor": "#0F1014",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0F1014",
+  "backgroundTextStyle": "light",
+  "usingComponents": {
+    "line-chart": "/components/ui/line-chart/index",
+    "topbar": "/components/topbar/index"
+  }
+}

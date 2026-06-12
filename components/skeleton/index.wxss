@@ -1,0 +1,82 @@
+.skeleton {
+  padding: 16rpx 0;
+}
+
+/* Shimmer 动画 */
+.skeleton__shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* 卡片骨架 */
+.skeleton__card {
+  display: flex;
+  gap: 20rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 16rpx;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1rpx solid rgba(255, 255, 255, 0.04);
+  border-radius: 16rpx;
+}
+.skeleton__circle {
+  flex-shrink: 0;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+}
+.skeleton__circle--sm {
+  width: 60rpx;
+  height: 60rpx;
+}
+.skeleton__card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+.skeleton__line {
+  height: 24rpx;
+  border-radius: 6rpx;
+}
+.skeleton__line--title {
+  width: 60%;
+  height: 32rpx;
+}
+.skeleton__line--text { width: 90%; }
+.skeleton__line--short { width: 40%; }
+.skeleton__line--list {
+  flex: 1;
+  height: 28rpx;
+}
+
+/* 列表骨架 */
+.skeleton__list-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 18rpx 24rpx;
+  margin-bottom: 8rpx;
+}
+
+/* 圆环骨架 */
+.skeleton__ring-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx 0;
+}
+.skeleton__ring {
+  width: 320rpx;
+  height: 320rpx;
+  border-radius: 50%;
+}

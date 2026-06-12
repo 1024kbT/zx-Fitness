@@ -1,0 +1,308 @@
+/* ===== 个人中心（极简版） ===== */
+.mine-page {
+  padding-bottom: 60rpx;
+}
+
+/* 顶栏（含返回） */
+.mine-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, rgba(15, 16, 20, 0.98) 0%, rgba(15, 16, 20, 0.92) 100%);
+  backdrop-filter: blur(24px);
+  z-index: 900;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.04);
+}
+.mine-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16rpx;
+  box-sizing: border-box;
+}
+.mine-topbar__back {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #1A1B20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mine-topbar__back-icon {
+  font-size: 40rpx;
+  color: #FFFFFF;
+  line-height: 1;
+  font-weight: 300;
+}
+.mine-topbar__back:active { background: #232429; }
+.mine-topbar__title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.5rpx;
+}
+.mine-topbar__placeholder {
+  width: 64rpx;
+}
+.mine-topbar__spacer {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* 个人卡 */
+.profile-card {
+  position: relative;
+  background: linear-gradient(160deg, #1A2A1F 0%, #162028 60%, #1A1828 100%);
+  border-radius: 28rpx;
+  padding: 40rpx 24rpx 36rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14rpx;
+  margin: 16rpx 0 32rpx;
+  overflow: hidden;
+  border: 1rpx solid rgba(128, 255, 0, 0.08);
+}
+.profile-card__glow {
+  position: absolute;
+  top: -80rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400rpx;
+  height: 400rpx;
+  background: radial-gradient(circle, rgba(128, 255, 0, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.profile-card__avatar-btn {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  line-height: 1;
+  border-radius: 50%;
+}
+.profile-card__avatar-btn::after { display: none; }
+.profile-card__avatar-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(128, 255, 0, 0.4);
+  box-shadow: 0 0 24rpx rgba(128, 255, 0, 0.3);
+}
+.profile-card__avatar-default {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #80FF00 0%, #4CAF50 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid rgba(128, 255, 0, 0.4);
+  box-shadow: 0 0 24rpx rgba(128, 255, 0, 0.3);
+}
+.profile-card__avatar-emoji {
+  font-size: 72rpx;
+  color: #0F1014;
+}
+.profile-card__avatar-badge {
+  position: absolute;
+  bottom: 4rpx;
+  right: 4rpx;
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #1A1B20;
+  border: 3rpx solid #0F1014;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+}
+.profile-card__name-row {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-top: 8rpx;
+}
+.profile-card__name {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.5rpx;
+}
+.profile-card__name-edit {
+  font-size: 24rpx;
+  color: #9A9CA8;
+}
+.profile-card__motto {
+  font-size: 22rpx;
+  color: #9A9CA8;
+  letter-spacing: 0.3rpx;
+}
+
+/* 个人数据列表 */
+.data-list {
+  background: #1A1B20;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26rpx 24rpx;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.04);
+}
+.data-item:last-child { border-bottom: none; }
+.data-item__label {
+  font-size: 26rpx;
+  color: #9A9CA8;
+  letter-spacing: 0.3rpx;
+}
+.data-item__value {
+  font-size: 28rpx;
+  color: #FFFFFF;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.data-item__value--accent {
+  color: #80FF00;
+  font-weight: 700;
+}
+
+/* 训练统计 3 列 */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14rpx;
+}
+.stat-card {
+  background: #1A1B20;
+  border-radius: 20rpx;
+  padding: 22rpx 14rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  align-items: center;
+}
+.stat-card__label {
+  font-size: 20rpx;
+  color: #9A9CA8;
+  letter-spacing: 0.3rpx;
+}
+.stat-card__value {
+  display: flex;
+  align-items: baseline;
+  gap: 3rpx;
+}
+.stat-card__num {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -0.5rpx;
+}
+.stat-card__num--accent { color: #80FF00; }
+.stat-card__unit {
+  font-size: 18rpx;
+  color: #9A9CA8;
+}
+
+/* 简单操作 */
+.simple-actions {
+  background: #1A1B20;
+  border-radius: 20rpx;
+  overflow: hidden;
+}
+.simple-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 24rpx;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.04);
+}
+.simple-action:last-child { border-bottom: none; }
+.simple-action:active { background: #232429; }
+.simple-action__label {
+  font-size: 28rpx;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+.simple-action__arrow {
+  font-size: 32rpx;
+  color: #5A5C66;
+  font-weight: 300;
+}
+
+/* 昵称弹窗 */
+.nickname-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nickname-modal__mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+.nickname-modal__card {
+  position: relative;
+  width: 620rpx;
+  max-width: 680rpx;
+  background: #1A1B20;
+  border-radius: 24rpx;
+  padding: 36rpx 32rpx;
+  border: 1rpx solid rgba(128, 255, 0, 0.15);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.5);
+}
+.nickname-modal__title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-align: center;
+  margin-bottom: 24rpx;
+  letter-spacing: 0.5rpx;
+}
+.nickname-modal__input {
+  padding: 26rpx;
+  background: #232429;
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  color: #FFFFFF;
+  margin-bottom: 28rpx;
+  font-family: 'PingFang SC', sans-serif;
+}
+.nickname-modal__btns {
+  display: flex;
+  gap: 16rpx;
+}
+.nickname-modal__btn {
+  flex: 1;
+  padding: 22rpx;
+  border-radius: 999rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  letter-spacing: 0.5rpx;
+}
+.nickname-modal__btn--cancel {
+  background: #232429;
+  color: #9A9CA8;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+}
+.nickname-modal__btn--ok {
+  background: #80FF00;
+  color: #0F1014;
+}
+.nickname-modal__btn:active { opacity: 0.85; transform: scale(0.97); }

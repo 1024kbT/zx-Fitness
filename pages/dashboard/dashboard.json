@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "数据看板",
+  "navigationBarBackgroundColor": "#0F1014",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0F1014",
+  "backgroundTextStyle": "light",
+  "usingComponents": {
+    "progress-ring": "/components/ui/progress-ring/index",
+    "bar-chart": "/components/ui/bar-chart/index",
+    "line-chart": "/components/ui/line-chart/index",
+    "topbar": "/components/topbar/index"
+  }
+}

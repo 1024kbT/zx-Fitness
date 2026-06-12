@@ -1,0 +1,41 @@
+.timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32rpx 0;
+}
+
+.timer__ring {
+  position: relative;
+  width: 320rpx;
+  height: 320rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 255, 136, 0.03);
+  border: 2rpx solid rgba(0, 255, 136, 0.15);
+  box-shadow: 0 0 60rpx rgba(0, 255, 136, 0.08), inset 0 0 40rpx rgba(0, 255, 136, 0.04);
+}
+
+.timer__display {
+  font-size: 80rpx;
+  font-weight: 200;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 4rpx;
+  color: var(--primary);
+  text-shadow: 0 0 30rpx rgba(0, 255, 136, 0.4);
+  font-family: -apple-system, "SF Mono", "SF Pro Display", Menlo, monospace;
+}
+
+.timer__display:active {
+  opacity: 0.7;
+}
+
+.timer__hint {
+  margin-top: 16rpx;
+  font-size: 20rpx;
+  letter-spacing: 4rpx;
+  color: #4b5563;
+  text-transform: uppercase;
+}

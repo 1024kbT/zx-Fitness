@@ -1,0 +1,6 @@
+<view class="timer">
+  <view class="timer__ring">
+    <view class="timer__display" bindtap="onTapToggle">{{display}}</view>
+  </view>
+  <view class="timer__hint">{{running ? 'TAP TO PAUSE' : 'TAP TO START'}}</view>
+</view>

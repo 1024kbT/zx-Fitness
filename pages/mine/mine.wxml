@@ -1,0 +1,134 @@
+<view class="page-v2 mine-page">
+  <!-- 顶栏（含返回按钮，避开胶囊） -->
+  <view class="mine-topbar">
+    <view style="height: {{statusBarHeight}}px;"></view>
+    <view class="mine-topbar__inner" style="height: {{contentHeight}}px; padding-right: {{menuRight}}px;">
+      <view class="mine-topbar__back" bindtap="onBack">
+        <text class="mine-topbar__back-icon">‹</text>
+      </view>
+      <text class="mine-topbar__title">个人中心</text>
+      <view class="mine-topbar__placeholder"></view>
+    </view>
+  </view>
+  <view class="mine-topbar__spacer" style="height: {{navBarHeight}}px;"></view>
+
+  <!-- 个人卡 -->
+  <view class="profile-card">
+    <view class="profile-card__glow"></view>
+
+    <!-- 头像 -->
+    <button
+      class="profile-card__avatar-btn"
+      open-type="chooseAvatar"
+      bindchooseavatar="onChooseAvatar"
+    >
+      <image
+        wx:if="{{user.avatarUrl}}"
+        class="profile-card__avatar-img"
+        src="{{user.avatarUrl}}"
+        mode="aspectFill"
+      />
+      <view wx:else class="profile-card__avatar-default">
+        <text class="profile-card__avatar-emoji">🏃</text>
+      </view>
+      <view class="profile-card__avatar-badge">📷</view>
+    </button>
+
+    <!-- 昵称 -->
+    <view class="profile-card__name-row" bindtap="onOpenNicknameEditor">
+      <text class="profile-card__name">{{user.nickName || '点击设置昵称'}}</text>
+      <text class="profile-card__name-edit">✎</text>
+    </view>
+
+    <view class="profile-card__motto">{{user.bio || '每一次坚持，都是更好的自己'}}</view>
+  </view>
+
+  <!-- 个人数据 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">个人数据</text>
+    </view>
+    <view class="data-list">
+      <view class="data-item">
+        <text class="data-item__label">👤 性别</text>
+        <text class="data-item__value">{{user.gender === 1 ? '男' : user.gender === 2 ? '女' : '未设置'}}</text>
+      </view>
+      <view class="data-item">
+        <text class="data-item__label">📏 身高</text>
+        <text class="data-item__value">{{user.height ? user.height + ' cm' : '未设置'}}</text>
+      </view>
+      <view class="data-item">
+        <text class="data-item__label">⚖️ 体重</text>
+        <text class="data-item__value">{{user.weight ? user.weight + ' kg' : '未设置'}}</text>
+      </view>
+      <view class="data-item">
+        <text class="data-item__label">🎂 年龄</text>
+        <text class="data-item__value">{{user.age ? user.age + ' 岁' : '未设置'}}</text>
+      </view>
+      <view class="data-item">
+        <text class="data-item__label">🎯 BMI</text>
+        <text class="data-item__value data-item__value--accent">{{bmi || '--'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 训练统计 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">训练统计</text>
+    </view>
+    <view class="stat-grid">
+      <view class="stat-card">
+        <text class="stat-card__label">训练次数</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num">{{totalCount}}</text>
+          <text class="stat-card__unit">次</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <text class="stat-card__label">累计时长</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num">{{totalHours}}</text>
+          <text class="stat-card__unit">小时</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <text class="stat-card__label">累计消耗</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num stat-card__num--accent">{{totalCalories}}</text>
+          <text class="stat-card__unit">kcal</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 简单操作 -->
+  <view class="section-v2">
+    <view class="simple-actions">
+      <view class="simple-action" bindtap="onEditProfile">
+        <text class="simple-action__label">编辑资料</text>
+        <text class="simple-action__arrow">›</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 昵称编辑弹窗 -->
+<view wx:if="{{showNicknameModal}}" class="nickname-modal" catchtouchmove="noop">
+  <view class="nickname-modal__mask" bindtap="onCloseNicknameEditor"></view>
+  <view class="nickname-modal__card">
+    <view class="nickname-modal__title">修改昵称</view>
+    <input
+      class="nickname-modal__input"
+      placeholder="请输入昵称"
+      placeholder-style="color: #5A5C66; font-size: 28rpx; font-family: 'PingFang SC', sans-serif;"
+      value="{{nicknameInput}}"
+      bindinput="onNicknameInput"
+      focus="{{showNicknameModal}}"
+    />
+    <view class="nickname-modal__btns">
+      <view class="nickname-modal__btn nickname-modal__btn--cancel" bindtap="onCloseNicknameEditor">取消</view>
+      <view class="nickname-modal__btn nickname-modal__btn--ok" bindtap="onSaveNickname">保存</view>
+    </view>
+  </view>
+</view>

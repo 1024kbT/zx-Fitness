@@ -1,0 +1,221 @@
+<view class="home">
+  <!-- 骨架屏（首次加载） -->
+  <block wx:if="{{loading}}">
+    <view class="greet">
+      <view class="greet__row">
+        <view class="greet__icon" style="background: rgba(255,255,255,0.08);">☀</view>
+        <view class="greet__body">
+          <view class="skeleton__line skeleton__line--title skeleton__shimmer" style="height: 30rpx; width: 200rpx; margin-bottom: 10rpx;"></view>
+          <view class="skeleton__line skeleton__line--short skeleton__shimmer" style="height: 20rpx;"></view>
+        </view>
+      </view>
+    </view>
+    <skeleton type="circle" rows="{{1}}" />
+    <skeleton type="card" rows="{{3}}" avatar="{{true}}" />
+  </block>
+
+  <!-- 正常内容 -->
+  <block wx:else>
+  <!-- 顶部问候 -->
+  <view class="greet">
+    <view class="greet__row">
+      <view class="greet__icon">☀</view>
+      <view class="greet__body">
+        <view class="greet__text">{{greeting}}</view>
+        <view class="greet__sub">第 1 天 · {{weekDay}} · {{dateLabel}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 核心：热量缺口圆环 -->
+  <view class="card gap-card">
+    <view class="gap-card__head">
+      <text class="gap-card__title">今日热量缺口</text>
+      <text class="gap-card__sub">缺口 ≥ 500 kcal 科学减脂</text>
+    </view>
+    <view class="gap-ring-wrap">
+      <view class="gap-ring">
+        <!-- 标准圆环进度条（conic-gradient 从顶部顺时针填充） -->
+        <view
+          class="gap-ring__fill"
+          style="background: conic-gradient(from -90deg, #00ff88 0%, #00e5ff {{gapRingPercent}}%, rgba(255,255,255,0.06) {{gapRingPercent}}%, rgba(255,255,255,0.06) 100%);"
+        ></view>
+        <view class="gap-ring__hole"></view>
+        <view class="gap-ring__text">
+          <text class="gap-ring__num {{gapNumClass}}">{{gapNumText}}</text>
+          <text class="gap-ring__unit">kcal</text>
+          <text class="gap-ring__label">{{gapLabel}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="gap-split">
+      <view class="gap-item gap-item--in" bindtap="onGoDiet">
+        <text class="gap-item__icon">🍽</text>
+        <view class="gap-item__body">
+          <view class="gap-item__label">摄入</view>
+          <view class="gap-item__val">{{intake}} <text class="gap-item__unit">kcal</text></view>
+        </view>
+        <text class="gap-item__arrow">›</text>
+      </view>
+      <view class="gap-divider"></view>
+      <view class="gap-item gap-item--out" bindtap="onGoSchedule">
+        <text class="gap-item__icon">🔥</text>
+        <view class="gap-item__body">
+          <view class="gap-item__label">消耗</view>
+          <view class="gap-item__val">{{burned}} <text class="gap-item__unit">kcal</text></view>
+          <view class="gap-item__sub">运动 {{exerciseBurn}} + 代谢 {{bmrBurn}}</view>
+        </view>
+        <text class="gap-item__arrow">›</text>
+      </view>
+    </view>
+    <view class="gap-card__footer" bindtap="onEditIntakeGoal">
+      <text>摄入目标 {{intakeGoal}} kcal</text>
+      <text class="gap-card__edit">调整 ›</text>
+    </view>
+  </view>
+
+  <!-- 体重变化条 -->
+  <view class="card weight-bar" bindtap="onGoWeight">
+    <view class="weight-bar__left">
+      <text class="weight-bar__icon">⚖</text>
+      <view class="weight-bar__body">
+        <view class="weight-bar__label">当前体重</view>
+        <view class="weight-bar__val">{{currentWeight > 0 ? currentWeight : '--'}} <text class="weight-bar__unit">kg</text></view>
+      </view>
+    </view>
+    <view class="weight-bar__delta {{weightDelta < 0 ? 'weight-bar__delta--down' : weightDelta > 0 ? 'weight-bar__delta--up' : 'weight-bar__delta--flat'}}">
+      <text wx:if="{{weightDelta !== 0}}">{{weightDelta > 0 ? '+' : ''}}{{weightDelta}} kg</text>
+      <text wx:else>持平</text>
+      <text class="weight-bar__vs">vs 初始</text>
+    </view>
+  </view>
+
+  <!-- 快速入口 -->
+  <view class="quick">
+    <view class="quick__title">快速入口</view>
+    <view class="quick__grid">
+      <view class="quick__item" bindtap="onGoDiet">
+        <view class="quick__icon quick__icon--diet">🥗</view>
+        <view class="quick__name">饮食记录</view>
+        <view class="quick__desc">今日 {{intake}}kcal</view>
+      </view>
+      <view class="quick__item" bindtap="onGoWeight">
+        <view class="quick__icon quick__icon--weight">📏</view>
+        <view class="quick__name">体重记录</view>
+        <view class="quick__desc">记录今日</view>
+      </view>
+      <view class="quick__item" bindtap="onGoAIChat">
+        <view class="quick__icon quick__icon--ai">🤖</view>
+        <view class="quick__name">AI 助手</view>
+        <view class="quick__desc">DeepSeek</view>
+      </view>
+      <view class="quick__item" bindtap="onGoProfile">
+        <view class="quick__icon quick__icon--me">👤</view>
+        <view class="quick__name">我的目标</view>
+        <view class="quick__desc">偏好设置</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 本周打卡 -->
+  <view class="card checkin">
+    <view class="checkin__head">
+      <view class="checkin__title">本周打卡</view>
+      <view class="checkin__count">{{weekCheckins}} / {{weekDays}}</view>
+    </view>
+    <view class="checkin__dots">
+      <view
+        wx:for="{{weekCheckinDays}}"
+        wx:key="dow"
+        class="checkin__dot {{item.done ? 'checkin__dot--on' : ''}} {{item.isToday ? 'checkin__dot--today' : ''}}"
+        data-dow="{{item.dow}}"
+        bindtap="onTapCheckin"
+      >
+        <text class="checkin__label">{{item.label}}</text>
+        <text wx:if="{{item.done}}" class="checkin__check">✓</text>
+      </view>
+    </view>
+    <view class="checkin__hint" wx:if="{{weekCheckins >= 5}}">
+      🔥 本周已达成 {{weekCheckins}} 天，继续保持！
+    </view>
+  </view>
+
+  <!-- 今日训练预览 -->
+  <view class="card preview">
+    <view class="preview__head">
+      <view class="preview__title">
+        <text class="preview__dot {{isTrainingDay ? 'preview__dot--on' : ''}}"></text>
+        <text>{{isTrainingDay ? '今天是训练日' : '今日无训练安排'}}</text>
+      </view>
+      <view wx:if="{{isTrainingDay}}" class="preview__sub" bindtap="onStartTodayPlan">开始 ›</view>
+    </view>
+
+    <view wx:if="{{isTrainingDay}}" class="preview__body">
+      <view wx:if="{{todayPlan}}" class="preview__tag">
+        <text>{{todayPlan.label}}</text>
+        <text class="preview__muscle">{{todayPlan.muscle}}</text>
+      </view>
+      <view class="preview__list">
+        <view class="preview__item" wx:for="{{todayExercises}}" wx:key="id" data-id="{{item.id}}" bindtap="onTapTodayExercise">
+          <text class="preview__emoji">{{item.emoji || '🎯'}}</text>
+          <view class="preview__info">
+            <text class="preview__name">{{item.name}}</text>
+            <text class="preview__meta">{{item.default_sets}}×{{item.type === 'time' ? item.default_seconds + 's' : item.default_reps}}</text>
+          </view>
+          <text class="preview__arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class="preview__empty">
+      <text class="preview__empty-icon">☕</text>
+      <text class="preview__empty-text">今日无训练安排</text>
+    </view>
+  </view>
+
+  <!-- 训练入口 -->
+  <view class="card train-entry">
+    <view class="train-entry__main" bindtap="{{isTrainingDay ? 'onStartTodayPlan' : 'onGoTrainTab'}}">
+      <view class="train-entry__main-icon">{{isTrainingDay ? '💪' : '🏋️'}}</view>
+      <view class="train-entry__main-body">
+        <view class="train-entry__main-title">{{isTrainingDay ? '开始今日训练' : '浏览动作库'}}</view>
+        <view class="train-entry__main-sub">{{isTrainingDay ? todayPlan.muscle || '按计划开练' : '查看 39 个专业动作'}}</view>
+      </view>
+      <view class="train-entry__main-arrow">›</view>
+    </view>
+    <view class="train-entry__shortcuts">
+      <view class="train-entry__chip" bindtap="onGoSchedule">
+        <text>📅 日程</text>
+      </view>
+      <view class="train-entry__chip" bindtap="onGoCustomPlan">
+        <text>📋 训练计划</text>
+      </view>
+      <view class="train-entry__chip" bindtap="onGoCustomExercise">
+        <text>✨ 自定义动作</text>
+      </view>
+    </view>
+    <view wx:if="{{!activePlan}}" class="train-entry__hint" bindtap="onGoCustomPlan">
+      💡 还没有训练计划？点此创建一个 ›
+    </view>
+  </view>
+
+  <!-- 饮食建议提示 -->
+  <view class="card tip">
+    <view class="tip__head">💡 今日饮食建议</view>
+    <view class="tip__line">
+      <text class="tip__icon">💧</text>
+      <text>全天饮水 2-3L，训练前后尤佳</text>
+    </view>
+    <view class="tip__line">
+      <text class="tip__icon">🥩</text>
+      <text>训练后 30 分钟补蛋白（鸡胸/蛋白粉）</text>
+    </view>
+    <view class="tip__line">
+      <text class="tip__icon">🍌</text>
+      <text>训练前 1-2h 少量碳水（半根香蕉）</text>
+    </view>
+  </view>
+
+  <view class="footer">FITKEEP · 科学管理热量 · 健康减脂</view>
+  </block>
+</view>

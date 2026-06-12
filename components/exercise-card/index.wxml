@@ -1,0 +1,20 @@
+<view class="ex-card">
+  <image wx:if="{{exercise.image}}" class="ex-card__image" src="{{exercise.image}}" mode="aspectFill" />
+  <view wx:else class="ex-card__icon">{{exercise.emoji || '🏋️'}}</view>
+  <view class="ex-card__body">
+    <view class="ex-card__title">{{exercise.name}}</view>
+    <view class="ex-card__meta">
+      <text class="tag">{{exercise.level}}</text>
+      <text class="ex-card__muscle">{{exercise.primary_muscle}}</text>
+    </view>
+    <view class="ex-card__sub">
+      <block wx:if="{{exercise.type === 'time'}}">
+        {{exercise.default_sets}}组 × {{exercise.default_seconds}}s
+      </block>
+      <block wx:else>
+        {{exercise.default_sets}}组 × {{exercise.default_reps}}次
+      </block>
+    </view>
+  </view>
+  <view class="ex-card__arrow">›</view>
+</view>

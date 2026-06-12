@@ -1,0 +1,239 @@
+/* ===== 数据看板 ===== */
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 8rpx 4rpx 20rpx;
+}
+.header__avatar {
+  position: relative;
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #80FF00 0%, #4CAF50 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 20rpx rgba(128, 255, 0, 0.3);
+}
+.header__avatar-text {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #0F1014;
+}
+.header__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  min-width: 0;
+}
+.header__greet {
+  font-size: 22rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.header__name {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.header__bell {
+  position: relative;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: var(--bg-card-v2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.header__bell-icon {
+  font-size: 32rpx;
+}
+.header__bell:active { background: var(--bg-elevated); }
+
+/* 连续坚持 */
+.streak {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 24rpx;
+  background: linear-gradient(135deg, #1E3A1E 0%, #0F1F14 100%);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--gap);
+  border: 1rpx solid rgba(128, 255, 0, 0.15);
+}
+.streak__left {
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+}
+.streak__text {
+  font-size: 24rpx;
+  color: var(--text-v1);
+  letter-spacing: 0.5rpx;
+}
+.streak__num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--accent-v2);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -1rpx;
+  text-shadow: 0 0 16rpx rgba(128, 255, 0, 0.4);
+}
+.streak__badge {
+  padding: 10rpx 20rpx;
+  background: var(--accent-v2);
+  color: #0F1014;
+  font-size: 22rpx;
+  font-weight: 700;
+  border-radius: 999rpx;
+  letter-spacing: 0.5rpx;
+}
+
+/* 4 指标网格 */
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+  margin-bottom: 32rpx;
+}
+.metric-card {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 22rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  transition: transform 0.15s;
+}
+.metric-card:active { transform: scale(0.98); }
+.metric-card__head {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+.metric-card__icon {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  background: rgba(128, 255, 0, 0.12);
+}
+.metric-card__icon--fire { background: rgba(255, 122, 46, 0.15); }
+.metric-card__icon--time { background: rgba(33, 150, 243, 0.15); }
+.metric-card__icon--walk { background: rgba(128, 255, 0, 0.12); }
+.metric-card__icon--water { background: rgba(33, 150, 243, 0.15); }
+.metric-card__title {
+  font-size: 22rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.metric-card__value {
+  display: flex;
+  align-items: baseline;
+  gap: 6rpx;
+  margin: 4rpx 0;
+}
+.metric-card__num {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -1rpx;
+}
+.metric-card__unit {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  font-weight: 400;
+}
+
+/* 下一步训练 */
+.next-card {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.next-card__icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 16rpx;
+  background: rgba(128, 255, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+.next-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.next-card__sub {
+  font-size: 22rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.next-card__title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  letter-spacing: 0.5rpx;
+}
+.next-card__meta {
+  font-size: 22rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.next-card__btn {
+  margin-top: 8rpx;
+  padding: 20rpx;
+  background: var(--accent-v2);
+  color: #0F1014;
+  font-size: 28rpx;
+  font-weight: 700;
+  border-radius: 999rpx;
+  text-align: center;
+  letter-spacing: 0.5rpx;
+}
+.next-card__btn:active { opacity: 0.85; transform: scale(0.98); }
+
+/* 骨架屏动画 */
+.skeleton__shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton__line {
+  height: 24rpx;
+  border-radius: 6rpx;
+}
+.skeleton__line--title { width: 60%; height: 32rpx; }
+.skeleton__line--short { width: 40%; }

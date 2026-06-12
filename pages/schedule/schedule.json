@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "训练日程",
+  "navigationBarBackgroundColor": "#0F1014",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0F1014",
+  "backgroundTextStyle": "light",
+  "usingComponents": {
+    "empty-state": "/components/empty-state/index",
+    "topbar": "/components/topbar/index"
+  }
+}

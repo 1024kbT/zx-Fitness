@@ -1,0 +1,91 @@
+<view class="page-v2">
+  <topbar title="运动记录" icon="🏃" />
+
+  <!-- 累计统计 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <view>
+        <text class="section-v2__title">累计统计</text>
+        <text class="section-v2__sub">记录每一滴汗水</text>
+      </view>
+    </view>
+    <view class="stat-grid">
+      <view class="stat-card">
+        <text class="stat-card__label">累计时长</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num">{{totalDuration}}</text>
+          <text class="stat-card__unit">分钟</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <text class="stat-card__label">累计消耗</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num stat-card__num--accent">{{totalCalories}}</text>
+          <text class="stat-card__unit">kcal</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <text class="stat-card__label">训练次数</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num">{{totalCount}}</text>
+          <text class="stat-card__unit">次</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 打卡记录 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">打卡记录</text>
+      <view class="btn-v2" bindtap="onAddRecord">
+        <text>+ 记录运动</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <empty-state
+      wx:if="{{records.length === 0}}"
+      icon="🏃"
+      title="还没有训练记录"
+      subtitle="完成第一次训练，开始你的健身之旅"
+      btn-text="开始训练"
+      btn-icon="▶"
+      bind:btntap="onAddRecord"
+    />
+
+    <!-- 记录列表 -->
+    <view wx:else class="rec-list">
+      <view
+        class="rec-item"
+        wx:for="{{records}}"
+        wx:key="id"
+      >
+        <view class="rec-item__icon rec-item__icon--{{item.type}}">
+          <text wx:if="{{item.type === 'cardio'}}">⚡</text>
+          <text wx:else>🏋️</text>
+        </view>
+        <view class="rec-item__body">
+          <view class="rec-item__top">
+            <text class="rec-item__name">{{item.name}}</text>
+            <text class="rec-item__time">{{item.timeLabel}}</text>
+          </view>
+          <view class="rec-item__bottom">
+            <text class="rec-item__meta">{{item.meta}}</text>
+            <view class="rec-item__cal">
+              <text class="rec-item__cal-num">{{item.calories}}</text>
+              <text class="rec-item__cal-unit">kcal</text>
+            </view>
+          </view>
+        </view>
+        <view
+          class="rec-item__del"
+          data-id="{{item.id}}"
+          catchtap="onDelete"
+        >
+          <text>删</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

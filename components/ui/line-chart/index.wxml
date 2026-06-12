@@ -1,0 +1,7 @@
+<view class="line-chart" style="width: {{width}}rpx; height: {{height}}rpx;">
+  <canvas
+    type="2d"
+    class="line-chart__canvas"
+    style="width: {{width}}rpx; height: {{height}}rpx;"
+  ></canvas>
+</view>

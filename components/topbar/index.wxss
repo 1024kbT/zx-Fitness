@@ -1,0 +1,112 @@
+.topbar {
+  width: 100%;
+  background: linear-gradient(180deg, rgba(15, 16, 20, 0.98) 0%, rgba(15, 16, 20, 0.92) 100%);
+  backdrop-filter: blur(24px);
+  z-index: 900;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.04);
+}
+.topbar--fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+  gap: 16rpx;
+  box-sizing: border-box;
+}
+.topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+  min-width: 0;
+}
+.topbar__avatar {
+  width: 68rpx;
+  height: 68rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #80FF00 0%, #4CAF50 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 18rpx rgba(128, 255, 0, 0.3);
+}
+.topbar__avatar-text {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #0F1014;
+}
+.topbar__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+}
+.topbar__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+.topbar__icon {
+  font-size: 26rpx;
+}
+.topbar__title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar__greet {
+  font-size: 20rpx;
+  color: #9A9CA8;
+  letter-spacing: 0.3rpx;
+  line-height: 1.2;
+}
+.topbar__name {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.topbar__bell {
+  position: relative;
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #1A1B20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.topbar__bell-icon { font-size: 26rpx; }
+.topbar__bell:active { background: #232429; }
+.topbar__bell-dot {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #80FF00;
+  border: 2rpx solid #1A1B20;
+  box-shadow: 0 0 8rpx rgba(128, 255, 0, 0.6);
+}
+.topbar__spacer {
+  width: 100%;
+  flex-shrink: 0;
+}

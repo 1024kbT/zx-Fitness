@@ -1,0 +1,136 @@
+<view class="page">
+  <!-- 顶栏（避开胶囊） -->
+  <view class="topbar">
+    <view style="height: {{statusBarHeight}}px;"></view>
+    <view class="topbar__inner" style="height: {{contentHeight}}px; padding-right: {{menuRight}}px;">
+      <view class="topbar__info">
+        <view class="topbar__title">
+          <view class="orb orb--mini {{sending ? 'orb--active' : ''}}">
+            <view class="orb__halo"></view>
+            <view class="orb__layer orb__layer--1"></view>
+            <view class="orb__layer orb__layer--2"></view>
+            <view class="orb__highlight"></view>
+          </view>
+          <text>AI 训练助手</text>
+        </view>
+        <view class="topbar__sub">{{sending ? '思考中...' : 'DeepSeek · 专业健身教练'}}</view>
+      </view>
+      <view class="topbar__btn" bindtap="onClear" wx:if="{{messages.length > 0}}">清空</view>
+    </view>
+  </view>
+  <!-- 顶栏占位 -->
+  <view style="height: {{navBarHeight}}px;"></view>
+
+  <!-- 消息流 -->
+  <scroll-view
+    scroll-y
+    class="chat"
+    scroll-into-view="{{scrollToView}}"
+    scroll-with-animation
+    enhanced
+    show-scrollbar="{{false}}"
+  >
+    <!-- 欢迎卡片 -->
+    <view class="welcome" wx:if="{{showQuick && messages.length === 0}}">
+      <!-- 灵动能量球 -->
+      <view class="orb-wrap">
+        <view class="orb {{sending ? 'orb--active' : ''}}">
+          <view class="orb__halo"></view>
+          <view class="orb__layer orb__layer--1"></view>
+          <view class="orb__layer orb__layer--2"></view>
+          <view class="orb__layer orb__layer--3"></view>
+          <view class="orb__highlight"></view>
+          <view class="orb__shine"></view>
+        </view>
+      </view>
+
+      <view class="welcome__title">嗨，我是你的 AI 训练教练</view>
+      <view class="welcome__desc">
+        随便问我训练方案、动作要点、饮食搭配……我都能帮你
+      </view>
+      <view class="welcome__hint">试试这些常见问题：</view>
+      <view class="quick-list">
+        <view
+          class="quick-item"
+          wx:for="{{quickPrompts}}"
+          wx:key="label"
+          data-text="{{item.text}}"
+          bindtap="onPickQuick"
+        >
+          <text class="quick-item__label">{{item.label}}</text>
+          <text class="quick-item__arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 对话气泡 -->
+    <view
+      class="msg msg--{{item.role}}"
+      wx:for="{{messages}}"
+      wx:key="time"
+      id="msg-{{index}}"
+    >
+      <!-- 用户气泡（右） -->
+      <block wx:if="{{item.role === 'user'}}">
+        <view class="msg__bubble msg__bubble--user" bindlongpress="onCopyMessage" data-content="{{item.content}}">
+          <text class="msg__text">{{item.content}}</text>
+        </view>
+        <view class="msg__avatar msg__avatar--user">我</view>
+      </block>
+      <!-- AI 气泡（左） -->
+      <block wx:else>
+        <view class="msg__avatar msg__avatar--ai">AI</view>
+        <view class="msg__bubble msg__bubble--ai {{item.error ? 'msg__bubble--error' : ''}} {{item.pending ? 'msg__bubble--pending' : ''}}" bindlongpress="onCopyMessage" data-content="{{item.content}}">
+          <view wx:if="{{item.pending}}" class="dot-loading">
+            <view class="dot-loading__dot"></view>
+            <view class="dot-loading__dot"></view>
+            <view class="dot-loading__dot"></view>
+          </view>
+          <text wx:else class="msg__text">{{item.content}}</text>
+        </view>
+      </block>
+    </view>
+
+    <view class="chat__bottom-pad"></view>
+  </scroll-view>
+
+  <!-- 输入区 -->
+  <view class="composer">
+    <!-- 预设问题 chips（横向滚动） -->
+    <scroll-view
+      scroll-x
+      class="composer__chips"
+      show-scrollbar="{{false}}"
+      wx:if="{{!sending}}"
+    >
+      <view class="composer__chips-inner">
+        <view
+          class="composer__chip"
+          wx:for="{{quickPrompts}}"
+          wx:key="label"
+          data-text="{{item.text}}"
+          bindtap="onPickQuick"
+        >
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="composer__inner">
+      <input
+        class="composer__input"
+        placeholder="问点什么..."
+        placeholder-class="composer__placeholder"
+        value="{{inputText}}"
+        bindinput="onInput"
+        confirm-type="send"
+        bindconfirm="onSend"
+        adjust-position="{{true}}"
+        cursor-spacing="20"
+      />
+      <view class="composer__send {{inputText && !sending ? 'composer__send--active' : ''}}" bindtap="onSend">
+        <text wx:if="{{!sending}}">发送</text>
+        <text wx:else>...</text>
+      </view>
+    </view>
+  </view>
+</view>

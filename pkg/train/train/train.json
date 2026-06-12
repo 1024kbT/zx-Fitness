@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "自由训练",
+  "navigationBarBackgroundColor": "#0a0e17",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0a0e17",
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "exercise-card": "/components/exercise-card/index"
+  }
+}

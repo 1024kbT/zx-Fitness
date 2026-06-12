@@ -1,0 +1,258 @@
+/* ===== 饮食计划 ===== */
+
+.diet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8rpx 4rpx 24rpx;
+}
+.diet-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+.diet-header__logo {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 18rpx;
+  background: rgba(128, 255, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+.diet-header__title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  letter-spacing: 0.5rpx;
+}
+
+/* 复用 dashboard 的 header__bell */
+.header__bell {
+  position: relative;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: var(--bg-card-v2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.header__bell-icon { font-size: 32rpx; }
+.header__bell:active { background: var(--bg-elevated); }
+
+/* 今日营养：双栏 */
+.nutri-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+}
+.nutri-card {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 24rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+.nutri-card--ring {
+  justify-content: center;
+}
+.nutri-card__goal {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+  text-align: center;
+}
+.nutri-card__remain {
+  font-size: 22rpx;
+  color: var(--text-v1);
+  text-align: center;
+  letter-spacing: 0.3rpx;
+}
+.nutri-card__remain-num {
+  font-weight: 700;
+  color: var(--accent-v2);
+  font-variant-numeric: tabular-nums;
+}
+.nutri-card--macros {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 18rpx;
+}
+.nutri-card__title {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  letter-spacing: 0.5rpx;
+  margin-bottom: 4rpx;
+}
+
+/* 营养素项 */
+.macro {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.macro__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.macro__label {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.macro__value {
+  font-size: 20rpx;
+  color: var(--text-v1);
+  font-variant-numeric: tabular-nums;
+}
+.macro__num {
+  font-weight: 600;
+}
+.macro__unit {
+  color: var(--text-v2);
+  font-size: 18rpx;
+}
+
+/* 餐单 */
+.meal-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+}
+.meal-card {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 22rpx 18rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  min-width: 0;
+}
+.meal-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8rpx;
+}
+.meal-card__title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  min-width: 0;
+  flex: 1;
+}
+.meal-card__icon {
+  font-size: 22rpx;
+}
+.meal-card__title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  letter-spacing: 0.3rpx;
+}
+.meal-card__time {
+  font-size: 18rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.meal-card__check {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: var(--accent-v2);
+  color: #0F1014;
+  font-size: 20rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.meal-card__detail {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rpx;
+  min-height: 60rpx;
+}
+.meal-card__detail--empty {
+  color: var(--text-v3);
+  font-style: italic;
+}
+.meal-card__item { white-space: nowrap; }
+.meal-card__dot { color: var(--text-v3); }
+
+.meal-card__stats {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8rpx;
+}
+.meal-card__stat {
+  display: flex;
+  align-items: baseline;
+  gap: 3rpx;
+}
+.meal-card__stat-num {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5rpx;
+}
+.meal-card__stat-unit {
+  font-size: 18rpx;
+  color: var(--text-v2);
+}
+.meal-card__macros-text {
+  font-size: 18rpx;
+  color: var(--text-v2);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3rpx;
+}
+
+/* AI 输入 */
+.ai-input {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  border: 1rpx solid var(--border-v2);
+}
+.ai-input input {
+  flex: 1;
+  font-size: 24rpx;
+  color: var(--text-v1);
+  padding: 16rpx 20rpx;
+  background: var(--bg-card-2);
+  border-radius: 999rpx;
+  min-height: 40rpx;
+}
+.ai-input__placeholder { color: var(--text-v3); }
+.ai-input__btn {
+  padding: 18rpx 32rpx;
+  background: var(--accent-v2);
+  color: #0F1014;
+  font-size: 26rpx;
+  font-weight: 700;
+  border-radius: 999rpx;
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+}
+.ai-input__btn--busy {
+  opacity: 0.6;
+}
+.ai-input__btn:active { opacity: 0.85; transform: scale(0.96); }

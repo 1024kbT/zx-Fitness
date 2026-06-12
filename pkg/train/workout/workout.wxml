@@ -1,0 +1,360 @@
+<view class="workout" wx:if="{{exercise}}" style="padding-top: {{navBarHeight + 12}}px;">
+  <!-- Session 进度条（计划模式） -->
+  <view wx:if="{{sessionTotal > 0}}" class="session-bar card">
+    <view class="session-bar__head">
+      <text class="session-bar__plan">{{sessionPlanName || '今日训练'}}</text>
+      <view class="session-bar__progress">
+        <text class="session-bar__done">{{sessionDoneCount}}</text>
+        <text class="session-bar__slash"> / </text>
+        <text class="session-bar__total">{{sessionTotal}}</text>
+        <text class="session-bar__label"> 已完成</text>
+      </view>
+    </view>
+    <scroll-view scroll-x class="session-bar__icons" show-scrollbar="{{false}}">
+      <view class="session-icons">
+        <view
+          wx:for="{{sessionExercises}}"
+          wx:key="id"
+          class="session-icon session-icon--{{item.status}} {{sessionCurrentIndex === index ? 'session-icon--active' : ''}}"
+          data-idx="{{index}}"
+          bindtap="onTapSessionIcon"
+        >
+          <text class="session-icon__emoji">{{item.emoji || '🎯'}}</text>
+          <view class="session-icon__check" wx:if="{{item.status === 'done'}}">✓</view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="session-bar__bar">
+      <view class="session-bar__fill" style="width: {{sessionTotal > 0 ? (sessionDoneCount / sessionTotal * 100) : 0}}%"></view>
+    </view>
+    <view class="session-bar__swipe-hint">◀ 左右滑动切换动作 ▶</view>
+  </view>
+
+  <!-- 头部（可滑动切换动作） -->
+  <swiper
+    class="head-swiper"
+    current="{{sessionCurrentIndex}}"
+    bindchange="onExerciseSlideChange"
+    bindanimationfinish="onExerciseSlideFinish"
+    circular="{{false}}"
+    duration="{{250}}"
+    previous-margin="10rpx"
+    next-margin="10rpx"
+    wx:if="{{sessionTotal > 0}}"
+  >
+    <swiper-item wx:for="{{sessionExercises}}" wx:key="id">
+      <view class="head card head--swipe">
+        <view class="head__step">动作 {{index + 1}} / {{sessionTotal}}</view>
+        <view class="head__image-wrap">
+          <image
+            wx:if="{{item.image && !item.imageFailed}}"
+            class="head__image"
+            src="{{item.image}}"
+            mode="aspectFit"
+            data-idx="{{index}}"
+            binderror="onExerciseImageError"
+          />
+          <view wx:else class="head__emoji">{{item.emoji || '🎯'}}</view>
+        </view>
+        <view class="head__name">{{item.name}}</view>
+        <view class="head__meta">
+          <text class="head__sub">{{item.primaryMuscle || ''}}{{item.equipment ? ' · ' : ''}}{{item.equipment || ''}}</text>
+        </view>
+        <view class="head__target">
+          目标 {{item.totalSets}} 组 × {{item.defaultReps}}{{item.type === 'time' ? 's' : '次'}}
+        </view>
+        <view class="head__status head__status--{{item.status}}" wx:if="{{item.status !== 'current'}}">
+          <text wx:if="{{item.status === 'done'}}">✓ 已完成 {{item.completedSets}} 组 · {{item.calories}} kcal</text>
+          <text wx:else>待训练</text>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 单动作头部（非计划模式） -->
+  <view class="head head--single" wx:if="{{sessionTotal <= 0}}">
+    <view class="head__name">{{exercise.name}}</view>
+    <view class="head__meta">
+      <text class="tag">{{exercise.level}}</text>
+      <text class="head__sub">{{exercise.primary_muscle}} · {{exercise.equipment}}</text>
+    </view>
+    <view class="head__target">
+      目标 {{targetSets}}组 × {{exercise.type === 'time' ? exercise.default_seconds + 's' : exercise.default_reps + '次'}}
+    </view>
+  </view>
+
+  <!-- 休息倒计时覆盖层（改为底部抽屉） -->
+  <view class="rest-mask" wx:if="{{resting}}" catchtouchmove="noop" bindtap="noop">
+    <view class="rest-drawer" catchtap="noop">
+      <view class="rest-drawer__label">REST</view>
+      <view class="rest-drawer__time {{restPaused ? 'rest-drawer__time--paused' : ''}}">{{restDisplay}}</view>
+      <view class="rest-drawer__bar">
+        <view class="rest-drawer__fill" style="width: {{restTotal > 0 ? (restRemaining / restTotal * 100) : 0}}%"></view>
+      </view>
+      <!-- 暂停按钮 -->
+      <view class="rest-drawer__pause" bindtap="onToggleRestPause">
+        <text class="rest-drawer__pause-icon">{{restPaused ? '▶' : '⏸'}}</text>
+        <text class="rest-drawer__pause-text">{{restPaused ? '继续' : '暂停'}}</text>
+      </view>
+      <!-- 时长快捷调整（大按钮） -->
+      <view class="rest-drawer__tune">
+        <view class="rest-drawer__btn rest-drawer__btn--ghost" bindtap="onTuneRest" data-delta="-30">-30s</view>
+        <view class="rest-drawer__btn rest-drawer__btn--ghost" bindtap="onTuneRest" data-delta="-15">-15s</view>
+        <view class="rest-drawer__btn rest-drawer__btn--ghost" bindtap="onTuneRest" data-delta="15">+15s</view>
+        <view class="rest-drawer__btn rest-drawer__btn--ghost" bindtap="onTuneRest" data-delta="30">+30s</view>
+      </view>
+      <!-- 主操作（超大按钮） -->
+      <view class="rest-drawer__actions">
+        <view class="rest-drawer__btn rest-drawer__btn--primary" bindtap="onSkipRest">跳过休息 ▶</view>
+        <view class="rest-drawer__btn rest-drawer__btn--secondary" bindtap="onExtendRest">+15s</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 计时器（小标签，降级显示） -->
+  <view class="timer-mini" wx:if="{{!resting && !finished}}">
+    <text class="timer-mini__label">⏱ ELAPSED</text>
+    <fk-timer id="mainTimer" mode="countup" bind:tick="onTick" />
+  </view>
+
+  <!-- 组数 + 进度 -->
+  <view class="card sets">
+    <view class="row-between">
+      <view>
+        <view class="sets__title">COMPLETED</view>
+        <view class="sets__target">目标 {{targetSets}} 组</view>
+      </view>
+      <view class="sets__count">
+        <text class="sets__num">{{completedSets}}</text>
+        <text class="sets__total">/ {{targetSets}}</text>
+      </view>
+    </view>
+    <view class="sets__progress">
+      <view class="sets__progress-bar">
+        <view class="sets__progress-fill" style="width: {{targetSets > 0 ? (completedSets / targetSets * 100) : 0}}%"></view>
+      </view>
+    </view>
+    <!-- 已完成组详情 -->
+    <view class="sets__logs" wx:if="{{setLogs.length > 0}}">
+      <view class="sets__log" wx:for="{{setLogs}}" wx:key="set">
+        <text class="sets__log-index">第{{item.set}}组</text>
+        <text class="sets__log-detail">{{item.weight > 0 ? item.weight + 'kg × ' : ''}}{{item.reps}}{{exercise.type === 'time' ? 's' : '次'}}</text>
+      </view>
+    </view>
+    <view class="sets__adjust">
+      <view class="sets__btn" data-delta="-1" bindtap="onAdjustSets">−</view>
+      <text class="sets__adjust-label">调整组数</text>
+      <view class="sets__btn" data-delta="1" bindtap="onAdjustSets">+</view>
+    </view>
+  </view>
+
+  <!-- 组间休息设置 -->
+  <view class="card rest-config" wx:if="{{!finished && !resting}}">
+    <view class="rest-config__title">组间休息</view>
+    <!-- 时长快选 -->
+    <view class="rest-config__durations">
+      <view class="rest-chip {{restDuration === 30 ? 'rest-chip--on' : ''}}" data-sec="30" bindtap="onPickRestDuration">30s</view>
+      <view class="rest-chip {{restDuration === 60 ? 'rest-chip--on' : ''}}" data-sec="60" bindtap="onPickRestDuration">60s</view>
+      <view class="rest-chip {{restDuration === 90 ? 'rest-chip--on' : ''}}" data-sec="90" bindtap="onPickRestDuration">90s</view>
+      <view class="rest-chip {{restDuration === 120 ? 'rest-chip--on' : ''}}" data-sec="120" bindtap="onPickRestDuration">120s</view>
+    </view>
+    <!-- 模式切换 -->
+    <view class="rest-config__modes">
+      <view class="rest-mode {{restMode === 'full' ? 'rest-mode--on' : ''}}" data-mode="full" bindtap="onPickRestMode">
+        <text class="rest-mode__icon">⏱</text>
+        <text class="rest-mode__text">完整倒计时</text>
+      </view>
+      <view class="rest-mode {{restMode === 'hint' ? 'rest-mode--on' : ''}}" data-mode="hint" bindtap="onPickRestMode">
+        <text class="rest-mode__icon">🔔</text>
+        <text class="rest-mode__text">仅提示</text>
+      </view>
+      <view class="rest-mode {{restMode === 'off' ? 'rest-mode--on' : ''}}" data-mode="off" bindtap="onPickRestMode">
+        <text class="rest-mode__icon">⚡</text>
+        <text class="rest-mode__text">关闭</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当前组：重量 & 次数 -->
+  <view class="card current-set" wx:if="{{!finished && !resting}}">
+    <view class="current-set__title">当前组 · 第{{completedSets + 1}}组</view>
+    <view class="current-set__row">
+      <view class="current-set__field" wx:if="{{showWeightInput}}">
+        <view class="current-set__label">WEIGHT (kg) · +{{weightStep}}</view>
+        <view class="current-set__controls">
+          <view class="current-set__btn" data-delta="-1" bindtap="onAdjustWeight">−</view>
+          <text class="current-set__value">{{currentWeight}}</text>
+          <view class="current-set__btn" data-delta="1" bindtap="onAdjustWeight">+</view>
+        </view>
+      </view>
+      <view class="current-set__field {{showWeightInput ? '' : 'current-set__field--full'}}">
+        <view class="current-set__label">{{exercise.type === 'time' ? 'SECONDS' : 'REPS'}}</view>
+        <view class="current-set__controls">
+          <view class="current-set__btn" data-delta="-1" bindtap="onAdjustReps">−</view>
+          <text class="current-set__value current-set__value--green">{{currentReps}}</text>
+          <view class="current-set__btn" data-delta="1" bindtap="onAdjustReps">+</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 动作要领（默认折叠） -->
+  <view class="card tips tips--foldable" wx:if="{{exercise.instructions && exercise.instructions.length > 0}}">
+    <view class="tips__head" bindtap="onToggleTips">
+      <text class="tips__title">💡 INSTRUCTIONS</text>
+      <text class="tips__arrow {{showTips ? 'tips__arrow--on' : ''}}">›</text>
+    </view>
+    <view class="tips__body" wx:if="{{showTips}}">
+      <view class="tips__item" wx:for="{{exercise.instructions}}" wx:key="*this">
+        <text class="tips__dot">{{index + 1}}</text>
+        <text class="tips__text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作区 -->
+  <view class="actions">
+    <!-- 滑块完成一组 -->
+    <view class="swipe-wrap" wx:if="{{!resting && !finished && !showSummary}}">
+      <view class="swipe-track">
+        <view class="swipe-track__fill" style="width: {{swipePercent}}%"></view>
+        <view class="swipe-track__text">
+          <text wx:if="{{swipePercent < 50}}">◀ 滑动完成一组 ▶</text>
+          <text wx:elif="{{swipePercent < 70}}" class="swipe-track__text--mid">继续滑动…</text>
+          <text wx:else class="swipe-track__text--done">✓ 松手完成</text>
+        </view>
+        <view
+          class="swipe-thumb"
+          style="left: {{swipePercent}}%"
+          catchtouchstart="onSwipeStart"
+          catchtouchmove="onSwipeMove"
+          catchtouchend="onSwipeEnd"
+        >
+          <text class="swipe-thumb__icon">▶</text>
+        </view>
+      </view>
+      <view class="swipe-hint">已完成 {{completedSets}} / {{targetSets}} 组</view>
+    </view>
+
+    <view class="actions__row" wx:if="{{!finished && !showSummary}}">
+      <view class="actions__sec" bindtap="onToggle">{{running ? '暂停' : '开始'}}</view>
+      <view class="actions__sec actions__sec--danger" bindtap="onConfirmAbort">{{sessionTotal > 0 ? '结束今日' : '结束训练'}}</view>
+    </view>
+    <view class="actions__row" wx:if="{{finished && !finishedHasNext && !showSummary && sessionTotal <= 0}}">
+      <view class="actions__sec" bindtap="onBackHome">返回首页</view>
+    </view>
+  </view>
+
+  <!-- Session 总结（所有动作完成） -->
+  <view class="summary-mask" wx:if="{{showSummary}}" catchtouchmove="noop">
+    <view class="summary-card">
+      <view class="summary-card__title">今日训练完成 🎉</view>
+      <view class="summary-card__plan">{{summaryPlanName || '训练总结'}}</view>
+      <view class="summary-card__stats">
+        <view class="summary-stat">
+          <text class="summary-stat__num">{{summaryTotalSets}}</text>
+          <text class="summary-stat__label">总组数</text>
+        </view>
+        <view class="summary-stat">
+          <text class="summary-stat__num">{{summaryTotalCalories}}</text>
+          <text class="summary-stat__label">总千卡</text>
+        </view>
+        <view class="summary-stat">
+          <text class="summary-stat__num">{{sessionTotal}}</text>
+          <text class="summary-stat__label">动作数</text>
+        </view>
+      </view>
+      <view class="summary-card__list">
+        <view class="summary-ex" wx:for="{{summaryExercises}}" wx:key="id">
+          <view class="summary-ex__check">✓</view>
+          <view class="summary-ex__body">
+            <text class="summary-ex__name">{{item.name}}</text>
+            <text class="summary-ex__meta">{{item.completedSets}} 组 · {{item.calories}} kcal</text>
+          </view>
+        </view>
+      </view>
+      <!-- 分享海报 + 返回首页 -->
+      <view class="summary-card__actions">
+        <view class="summary-card__btn summary-card__btn--ghost" bindtap="onSharePoster">
+          <text>📤 分享海报</text>
+        </view>
+        <view class="summary-card__btn summary-card__btn--primary" bindtap="onEndSession">
+          <text>结束并返回首页</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 海报生成画布（隐藏） -->
+  <canvas
+    type="2d"
+    id="posterCanvas"
+    class="poster-canvas"
+    style="width: 600px; height: 900px;"
+  ></canvas>
+
+  <!-- 训练完成弹窗 -->
+  <view class="done-mask" wx:if="{{finished}}">
+    <view class="done-card">
+      <view class="done-card__top">
+        <view class="done-card__title">训练完成 🎉</view>
+        <view class="done-card__name">{{exercise.name}}</view>
+      </view>
+      <view class="done-card__ring">
+        <view class="done-ring">
+          <view class="done-ring__bg"></view>
+          <view class="done-ring__fill done-ring__anim"></view>
+          <view class="done-ring__text">
+            <text class="done-ring__num done-ring__num--anim">{{finishedCalories}}</text>
+            <text class="done-ring__unit">千卡</text>
+          </view>
+        </view>
+        <view class="done-card__method done-card__method--{{finishedMethod}}">
+          {{finishedMethodLabel}}
+        </view>
+      </view>
+      <view class="done-card__stats">
+        <view class="done-stat">
+          <text class="done-stat__num">{{finishedSets}}</text>
+          <text class="done-stat__label">组数</text>
+        </view>
+        <view class="done-stat__divider"></view>
+        <view class="done-stat">
+          <text class="done-stat__num done-stat__num--sm">{{finishedDurationLabel}}</text>
+          <text class="done-stat__label">时长</text>
+        </view>
+      </view>
+      <view class="done-card__breakdown" wx:if="{{finishedMethod === 'work'}}">
+        <view class="done-bd">
+          <text class="done-bd__label">机械功</text>
+          <text class="done-bd__val">{{finishedBreakdown.totalJoules}} J</text>
+        </view>
+        <view class="done-bd">
+          <text class="done-bd__label">EPOC 后燃</text>
+          <text class="done-bd__val">+{{finishedBreakdown.epocKcal}} kcal</text>
+        </view>
+        <view class="done-bd">
+          <text class="done-bd__label">组间休息</text>
+          <text class="done-bd__val">{{finishedBreakdown.restKcal}} kcal</text>
+        </view>
+      </view>
+      <view class="done-card__breakdown" wx:elif="{{finishedMethod === 'met'}}">
+        <view class="done-bd">
+          <text class="done-bd__label">MET 系数</text>
+          <text class="done-bd__val">{{finishedBreakdown.met}}</text>
+        </view>
+        <view class="done-bd">
+          <text class="done-bd__label">有效时长</text>
+          <text class="done-bd__val">{{finishedDurationLabel}}</text>
+        </view>
+        <view class="done-bd">
+          <text class="done-bd__label">EPOC 后燃</text>
+          <text class="done-bd__val">+{{finishedBreakdown.epocKcal}} kcal</text>
+        </view>
+      </view>
+      <view class="done-card__hint">
+        {{finishedHasNext ? '点击下方按钮继续下一个动作' : '点击下方按钮返回首页'}}
+      </view>
+    </view>
+  </view>
+</view>

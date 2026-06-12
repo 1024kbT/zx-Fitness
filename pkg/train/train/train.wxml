@@ -1,0 +1,85 @@
+<view class="page" style="padding-top: {{navBarHeight + 12}}px;">
+  <!-- 训练计划卡 -->
+  <view class="plan-bar card">
+    <view wx:if="{{activePlan}}" class="plan-bar__active">
+      <view class="plan-bar__info">
+        <text class="plan-bar__name">{{activePlan.name}}</text>
+        <text class="plan-bar__desc">{{activePlan.desc}}</text>
+      </view>
+      <view class="plan-bar__actions">
+        <view class="plan-bar__btn" bindtap="onSwitchPlan">切换</view>
+        <view class="plan-bar__btn plan-bar__btn--go" bindtap="onStartPlan">开始训练</view>
+      </view>
+    </view>
+    <view wx:else class="plan-bar__empty" bindtap="onShowPlanPicker">
+      <text class="plan-bar__empty-icon">📋</text>
+      <view class="plan-bar__empty-body">
+        <text class="plan-bar__empty-title">选择训练计划</text>
+        <text class="plan-bar__empty-desc">三分化 / 五分化 / 上下肢 / 自定义</text>
+      </view>
+      <text class="plan-bar__empty-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 搜索 -->
+  <view class="search">
+    <view class="search__box">
+      <text class="search__icon">🔍</text>
+      <input class="search__input" placeholder="搜索动作名/肌群/器械" value="{{keyword}}" bindinput="onSearch" />
+    </view>
+  </view>
+
+  <!-- 分类筛选 -->
+  <scroll-view scroll-x class="cat-scroll" show-scrollbar="{{false}}">
+    <view class="cat">
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="cat__item {{activeCategory === item.id ? 'cat__item--active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onSelectCategory"
+      >
+        <text class="cat__emoji">{{item.emoji}}</text>
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 动作列表 -->
+  <view class="list">
+    <view
+      wx:for="{{exercises}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onTapExercise"
+    >
+      <exercise-card exercise="{{item}}" />
+    </view>
+    <view wx:if="{{exercises.length === 0}}" class="empty">
+      <view class="empty__icon">🏋️</view>
+      <view class="empty__text">没有找到匹配的动作</view>
+    </view>
+  </view>
+
+  <view class="count">共 {{exercises.length}} 个动作</view>
+
+  <!-- 计划选择器 -->
+  <view class="picker-mask" wx:if="{{showPlanPicker}}" bindtap="onClosePlanPicker" catchtouchmove="noop">
+    <view class="picker card" catchtap="noop">
+      <view class="picker__title">选择训练计划</view>
+      <view
+        wx:for="{{allPlans}}"
+        wx:key="id"
+        class="picker__item {{activePlan && activePlan.id === item.id ? 'picker__item--active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onSelectPlan"
+      >
+        <view class="picker__name">{{item.name}}</view>
+        <view class="picker__desc">{{item.desc}}</view>
+        <view class="picker__days">{{item.days.length}} 天/周</view>
+      </view>
+      <view class="picker__add" bindtap="onGoCustomPlan">＋ 新建自定义计划</view>
+      <view class="picker__close" bindtap="onClosePlanPicker">取消</view>
+    </view>
+  </view>
+</view>

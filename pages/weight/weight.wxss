@@ -1,0 +1,177 @@
+/* ===== 身体数据 ===== */
+
+.weight-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8rpx 4rpx 24rpx;
+}
+.weight-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+.weight-header__logo {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 18rpx;
+  background: rgba(128, 255, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+}
+.weight-header__title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  letter-spacing: 0.5rpx;
+}
+
+/* 复用 dashboard 的 header__bell */
+.header__bell {
+  position: relative;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: var(--bg-card-v2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.header__bell-icon { font-size: 32rpx; }
+.header__bell:active { background: var(--bg-elevated); }
+
+/* 身体指标 4 卡 */
+.body-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+}
+.body-metric {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 24rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.body-metric__label {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.body-metric__value {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+.body-metric__num {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -1rpx;
+}
+.body-metric__unit {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  font-weight: 400;
+}
+.body-metric__delta {
+  font-size: 20rpx;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4rpx;
+}
+.body-metric__delta--down { color: var(--accent-v2); }
+.body-metric__delta--up { color: var(--accent-v2); }
+.body-metric__delta--flat { color: var(--text-v2); }
+
+/* 范围切换 */
+.range-switch {
+  display: flex;
+  gap: 4rpx;
+  padding: 4rpx;
+  background: var(--bg-card-2);
+  border-radius: 999rpx;
+}
+.range-switch__item {
+  padding: 10rpx 20rpx;
+  font-size: 22rpx;
+  color: var(--text-v2);
+  border-radius: 999rpx;
+  letter-spacing: 0.3rpx;
+}
+.range-switch__item--on {
+  background: var(--accent-v2);
+  color: #0F1014;
+  font-weight: 600;
+}
+
+/* 围度 4 卡 */
+.girth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 12rpx;
+}
+.girth-card {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 20rpx 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+.girth-card__label {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.girth-card__num {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--text-v1);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5rpx;
+}
+.girth-card__unit {
+  font-size: 18rpx;
+  color: var(--text-v2);
+}
+
+/* 录入表单 */
+.record-form {
+  background: var(--bg-card-v2);
+  border-radius: var(--radius-md);
+  padding: 24rpx;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12rpx;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.form-field__label {
+  font-size: 20rpx;
+  color: var(--text-v2);
+  letter-spacing: 0.3rpx;
+}
+.form-field__input {
+  padding: 16rpx 18rpx;
+  background: var(--bg-card-2);
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  color: var(--text-v1);
+  border: 1rpx solid var(--border-v2);
+  min-height: 44rpx;
+  font-variant-numeric: tabular-nums;
+}

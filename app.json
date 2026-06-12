@@ -1,0 +1,59 @@
+{
+  "pages": [
+    "pages/dashboard/dashboard",
+    "pages/schedule/schedule",
+    "pages/diet/diet",
+    "pages/weight/weight",
+    "pages/record/record",
+    "pages/home/home",
+    "pages/mine/mine"
+  ],
+  "subpackages": [
+    {
+      "root": "pkg/train",
+      "pages": [
+        "workout/workout",
+        "train/train",
+        "custom-exercise/custom-exercise",
+        "custom-plan/custom-plan",
+        "ai-chat/ai-chat"
+      ]
+    }
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0F1014",
+    "navigationBarTitleText": "FitKeep",
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "custom",
+    "backgroundColor": "#0F1014",
+    "backgroundColorTop": "#0F1014",
+    "backgroundColorBottom": "#0F1014"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9A9CA8",
+    "selectedColor": "#80FF00",
+    "backgroundColor": "#0F1014",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/dashboard/dashboard", "text": "看板" },
+      { "pagePath": "pages/schedule/schedule", "text": "日程" },
+      { "pagePath": "pages/diet/diet", "text": "饮食" },
+      { "pagePath": "pages/weight/weight", "text": "身体" },
+      { "pagePath": "pages/record/record", "text": "记录" }
+    ]
+  },
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "assets" },
+      { "type": "folder", "value": "scripts" },
+      { "type": "folder", "value": "cloudfunctions" },
+      { "type": "glob", "value": "**/*.bak" },
+      { "type": "glob", "value": "**/*.md" }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

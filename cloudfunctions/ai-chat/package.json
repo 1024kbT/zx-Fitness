@@ -1,0 +1,9 @@
+{
+  "name": "ai-chat",
+  "version": "1.0.0",
+  "description": "FitKeep AI 训练助手 - DeepSeek 对接",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

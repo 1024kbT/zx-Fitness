@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "训练中",
+  "navigationBarBackgroundColor": "#0a0e17",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0a0e17",
+  "backgroundTextStyle": "dark",
+  "usingComponents": {
+    "fk-timer": "/components/timer/index"
+  }
+}

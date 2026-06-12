@@ -1,0 +1,19 @@
+<view class="tabbar">
+  <view
+    wx:for="{{list}}"
+    wx:key="icon"
+    class="tabbar__item {{selected === index ? 'tabbar__item--active' : ''}}"
+    data-index="{{index}}"
+    bindtap="onSwitchTab"
+  >
+    <!-- 选中态：绿底白图标 -->
+    <view wx:if="{{selected === index}}" class="tabbar__icon-wrap tabbar__icon-wrap--active">
+      <view class="tabbar__icon tabbar__icon--{{item.icon}}"></view>
+    </view>
+    <!-- 默认态：灰图标 -->
+    <view wx:else class="tabbar__icon-wrap">
+      <view class="tabbar__icon tabbar__icon--{{item.icon}}"></view>
+    </view>
+    <text class="tabbar__text">{{item.text}}</text>
+  </view>
+</view>

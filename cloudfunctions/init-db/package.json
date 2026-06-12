@@ -1,0 +1,9 @@
+{
+  "name": "init-db",
+  "version": "1.0.0",
+  "description": "FitKeep 数据库集合一键初始化",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

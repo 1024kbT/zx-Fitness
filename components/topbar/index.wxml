@@ -1,0 +1,31 @@
+<view class="topbar {{fixed ? 'topbar--fixed' : ''}}">
+  <!-- 状态栏占位 -->
+  <view style="height: {{statusBarHeight}}px;"></view>
+
+  <!-- 内容区（高度 = 胶囊垂直居中） -->
+  <view class="topbar__inner" style="height: {{contentHeight}}px; padding-right: {{menuRight}}px;">
+    <view class="topbar__left" bindtap="onGoMine">
+      <view class="topbar__avatar">
+        <text class="topbar__avatar-text">{{userName[0] || '👤'}}</text>
+      </view>
+      <view class="topbar__info">
+        <block wx:if="{{title}}">
+          <view class="topbar__title-row">
+            <text wx:if="{{icon}}" class="topbar__icon">{{icon}}</text>
+            <text class="topbar__title">{{title}}</text>
+          </view>
+        </block>
+        <block wx:else>
+          <text class="topbar__greet">{{greeting}}</text>
+          <text class="topbar__name">{{userName}}</text>
+        </block>
+      </view>
+    </view>
+    <view wx:if="{{showBell}}" class="topbar__bell" bindtap="onNotify">
+      <text class="topbar__bell-icon">🔔</text>
+      <view class="topbar__bell-dot"></view>
+    </view>
+  </view>
+</view>
+<!-- 占位（避免 fixed 遮挡内容） -->
+<view wx:if="{{fixed}}" class="topbar__spacer" style="height: {{navBarHeight}}px;"></view>

@@ -1,0 +1,143 @@
+<view class="page-v2">
+  <topbar title="饮食计划" icon="🍎" />
+
+  <!-- 今日营养 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <view>
+        <text class="section-v2__title">今日营养</text>
+        <text class="section-v2__sub">吃对才能练好</text>
+      </view>
+    </view>
+
+    <view class="nutri-grid">
+      <!-- 热量环形图 -->
+      <view class="nutri-card nutri-card--ring">
+        <progress-ring
+          value="{{intake}}"
+          goal="{{intakeGoal}}"
+          unit="kcal"
+          color="#FF7A2E"
+          size="{{260}}"
+          stroke-width="{{18}}"
+          label="已摄入"
+        />
+        <text class="nutri-card__goal">目标 {{intakeGoal}} kcal</text>
+        <view class="nutri-card__remain">
+          <text>还可摄入 </text>
+          <text class="nutri-card__remain-num">{{intakeGoal - intake > 0 ? intakeGoal - intake : 0}}</text>
+          <text> kcal</text>
+        </view>
+      </view>
+
+      <!-- 三大营养素 -->
+      <view class="nutri-card nutri-card--macros">
+        <text class="nutri-card__title">三大营养素</text>
+
+        <view class="macro">
+          <view class="macro__head">
+            <text class="macro__label">蛋白质</text>
+            <text class="macro__value">
+              <text class="macro__num">{{protein || 0}}</text>
+              <text class="macro__unit"> / {{proteinGoal || 165}} g</text>
+            </text>
+          </view>
+          <view class="progress-v2">
+            <view class="progress-v2__fill" style="width: {{proteinPct || 0}}%;"></view>
+          </view>
+        </view>
+
+        <view class="macro">
+          <view class="macro__head">
+            <text class="macro__label">碳水</text>
+            <text class="macro__value">
+              <text class="macro__num">{{carbs || 0}}</text>
+              <text class="macro__unit"> / {{carbsGoal || 240}} g</text>
+            </text>
+          </view>
+          <view class="progress-v2">
+            <view class="progress-v2__fill progress-v2__fill--blue" style="width: {{carbsPct || 0}}%;"></view>
+          </view>
+        </view>
+
+        <view class="macro">
+          <view class="macro__head">
+            <text class="macro__label">脂肪</text>
+            <text class="macro__value">
+              <text class="macro__num">{{fat || 0}}</text>
+              <text class="macro__unit"> / {{fatGoal || 70}} g</text>
+            </text>
+          </view>
+          <view class="progress-v2">
+            <view class="progress-v2__fill progress-v2__fill--orange" style="width: {{fatPct || 0}}%;"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 今日餐单 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">今日餐单</text>
+    </view>
+
+    <view class="meal-list">
+      <view class="meal-card" wx:for="{{mealGroups}}" wx:key="type">
+        <view class="meal-card__head">
+          <view class="meal-card__title-wrap">
+            <text class="meal-card__icon">{{item.icon}}</text>
+            <text class="meal-card__title">{{item.label}}</text>
+            <text class="meal-card__time">{{item.time}}</text>
+          </view>
+          <view class="meal-card__check" wx:if="{{item.kcal > 0}}">✓</view>
+        </view>
+
+        <!-- 食物明细 -->
+        <view class="meal-card__detail" wx:if="{{item.items.length > 0}}">
+          <block wx:for="{{item.items}}" wx:for-item="m" wx:key="id">
+            <text class="meal-card__item">{{m.name}}{{m.grams ? ' ' + m.grams + 'g' : ''}}</text>
+            <text wx:if="{{index < item.items.length - 1}}" class="meal-card__dot">·</text>
+          </block>
+        </view>
+        <view class="meal-card__detail meal-card__detail--empty" wx:else>
+          <text>暂未记录，去添加食物吧</text>
+        </view>
+
+        <view class="divider-v2"></view>
+
+        <!-- 营养统计 -->
+        <view class="meal-card__stats">
+          <view class="meal-card__stat">
+            <text class="meal-card__stat-num">{{item.kcal}}</text>
+            <text class="meal-card__stat-unit">kcal</text>
+          </view>
+          <view class="meal-card__macros-text">
+            <text wx:if="{{item.protein}}">蛋 {{item.protein}}g</text>
+            <text wx:if="{{item.carbs}}"> 碳 {{item.carbs}}g</text>
+            <text wx:if="{{item.fat}}"> 脂 {{item.fat}}g</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- AI 快速录入 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">🤖 AI 快速录入</text>
+    </view>
+    <view class="ai-input">
+      <input
+        placeholder="例：早餐吃了两个鸡蛋、一片全麦面包和一杯牛奶"
+        placeholder-class="ai-input__placeholder"
+        value="{{aiText}}"
+        bindinput="onAIInput"
+        confirm-type="send"
+      />
+      <view class="ai-input__btn {{aiAnalyzing ? 'ai-input__btn--busy' : ''}}" bindtap="onAISubmit">
+        <text>{{aiAnalyzing ? '...' : '分析'}}</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,171 @@
+<view class="page-v2">
+  <topbar title="训练日程" icon="🔗" />
+
+  <!-- 本周概览 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <view>
+        <text class="section-v2__title">本周概览</text>
+        <text class="section-v2__sub">按计划完成每一次训练</text>
+      </view>
+    </view>
+    <view class="stat-grid">
+      <view class="stat-card">
+        <text class="stat-card__label">本周计划</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num">{{weekPlanCount}}</text>
+          <text class="stat-card__unit">次</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <text class="stat-card__label">已完成</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num stat-card__num--accent">{{weekDoneCount}}</text>
+          <text class="stat-card__unit">次</text>
+        </view>
+      </view>
+      <view class="stat-card">
+        <text class="stat-card__label">总时长</text>
+        <view class="stat-card__value">
+          <text class="stat-card__num">{{weekMinutes}}</text>
+          <text class="stat-card__unit">分</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 周切换 -->
+  <view class="week-nav">
+    <view class="week-nav__btn" bindtap="onPrevWeek">‹</view>
+    <text class="week-nav__title">{{weekLabel}}</text>
+    <view class="week-nav__today" bindtap="onGoToToday">今日</view>
+    <view class="week-nav__btn" bindtap="onNextWeek">›</view>
+  </view>
+
+  <!-- 日程列表 -->
+  <view class="section-v2">
+    <view class="section-v2__head">
+      <text class="section-v2__title">日程安排</text>
+      <view class="sch-header__action" bindtap="onGoCreatePlan">
+        <text>创建/切换计划 ›</text>
+      </view>
+    </view>
+
+    <view class="day-list">
+      <view
+        wx:for="{{days}}"
+        wx:key="key"
+        class="day-item day-item--{{item.status}} {{item.isToday ? 'day-item--today' : ''}}"
+      >
+        <view class="day-item__head" data-idx="{{index}}" bindtap="onToggleExpand">
+          <view class="day-item__date">
+            <text class="day-item__dow">{{item.dow}}</text>
+            <text class="day-item__md">{{item.month}}-{{item.date < 10 ? '0' : ''}}{{item.date}}</text>
+          </view>
+
+          <!-- 休息日 -->
+          <block wx:if="{{item.status === 'rest'}}">
+            <view class="day-item__icon day-item__icon--rest">☕</view>
+            <view class="day-item__body">
+              <text class="day-item__title">休息日</text>
+              <text class="day-item__sub">好好恢复，下次更强</text>
+            </view>
+            <view class="tag-v2 tag-v2--stretch">休息</view>
+          </block>
+
+          <!-- 已完成 -->
+          <block wx:elif="{{item.status === 'done'}}">
+            <view class="day-item__icon day-item__icon--done">✓</view>
+            <view class="day-item__body">
+              <text class="day-item__title">{{item.records[0].name || '训练'}}</text>
+              <text class="day-item__sub">⏱ {{item.durationLabel}} · {{item.records.length}} 个动作</text>
+            </view>
+            <view class="tag-v2 tag-v2--strength">力量</view>
+          </block>
+
+          <!-- 计划待练 -->
+          <block wx:elif="{{item.status === 'plan'}}">
+            <view class="day-item__icon day-item__icon--plan">📋</view>
+            <view class="day-item__body">
+              <text class="day-item__title">{{item.planLabel}}</text>
+              <text class="day-item__sub">{{item.planMuscle || '按计划训练'}}</text>
+            </view>
+            <view class="tag-v2 tag-v2--strength">力量</view>
+          </block>
+
+          <!-- 无安排 -->
+          <block wx:else>
+            <view class="day-item__icon day-item__icon--empty">—</view>
+            <view class="day-item__body">
+              <text class="day-item__title day-item__title--muted">无安排</text>
+              <text class="day-item__sub">今天暂无训练计划</text>
+            </view>
+          </block>
+
+          <view class="day-item__arrow {{item.expanded ? 'day-item__arrow--open' : ''}}">›</view>
+        </view>
+
+        <!-- 展开详情 -->
+        <view wx:if="{{item.expanded}}" class="day-item__expand">
+          <!-- 已完成：展示记录详情（含动作表格） -->
+          <block wx:if="{{item.status === 'done'}}">
+            <view class="day-table">
+              <view class="day-table__head">
+                <text class="day-table__th day-table__th--name">动作</text>
+                <text class="day-table__th">组数</text>
+                <text class="day-table__th">次数</text>
+                <text class="day-table__th">重量</text>
+              </view>
+              <view class="day-table__row" wx:for="{{item.records}}" wx:for-item="r" wx:key="id">
+                <text class="day-table__td day-table__td--name">{{r.name}}</text>
+                <text class="day-table__td">{{r.sets}}</text>
+                <text class="day-table__td">{{r.repsPerSet || r.secondsPerSet || '-'}}</text>
+                <text class="day-table__td">自重</text>
+              </view>
+            </view>
+            <view class="day-item__summary">
+              <text>共 {{item.records.length}} 项 · {{item.calories}} 千卡</text>
+            </view>
+          </block>
+
+          <!-- 计划待练：展示计划动作列表 -->
+          <block wx:elif="{{item.status === 'plan'}}">
+            <view class="day-table">
+              <view class="day-table__head">
+                <text class="day-table__th day-table__th--name">动作</text>
+                <text class="day-table__th">组数</text>
+                <text class="day-table__th">次数</text>
+              </view>
+              <view class="day-table__row" wx:for="{{item.planExercises}}" wx:for-item="ex" wx:key="id">
+                <text class="day-table__td day-table__td--name">{{ex.name}}</text>
+                <text class="day-table__td">{{ex.default_sets}}</text>
+                <text class="day-table__td">{{ex.type === 'time' ? ex.default_seconds + 's' : ex.default_reps}}</text>
+              </view>
+            </view>
+            <view class="day-item__start" data-idx="{{index}}" catchtap="onStartTraining">
+              <text>开始训练 ▶</text>
+            </view>
+          </block>
+
+          <!-- 休息日 -->
+          <block wx:elif="{{item.status === 'rest'}}">
+            <view class="day-item__rest-actions">
+              <view class="btn-v2 btn-v2--ghost" data-idx="{{index}}" catchtap="onToggleRest">
+                <text>取消休息</text>
+              </view>
+            </view>
+          </block>
+
+          <!-- 无安排 -->
+          <block wx:else>
+            <view class="day-item__rest-actions">
+              <view class="btn-v2 btn-v2--ghost" data-idx="{{index}}" catchtap="onToggleRest">
+                <text>标记为休息</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

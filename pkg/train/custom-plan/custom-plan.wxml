@@ -1,0 +1,145 @@
+<view class="page" style="padding-top: {{navBarHeight + 12}}px;">
+  <view class="header">
+    <view class="header__title">自定义计划</view>
+    <view class="header__desc">定制你的训练分化方案</view>
+  </view>
+
+  <view class="add-btn" bindtap="onAddPlan">
+    <text class="add-btn__icon">＋</text>
+    <text class="add-btn__text">新建训练计划</text>
+  </view>
+
+  <view class="list">
+    <view class="plan card {{expandedPlan === item.id ? 'plan--expanded' : ''}}" wx:for="{{list}}" wx:key="id">
+      <!-- 计划头部：点击展开/折叠 -->
+      <view class="plan__head" bindtap="onTogglePlan" data-id="{{item.id}}">
+        <view class="plan__info">
+          <view class="plan__name">{{item.name}}</view>
+          <view class="plan__desc">{{item.desc || '自定义计划'}}</view>
+        </view>
+        <view class="plan__right">
+          <view class="plan__days-count">{{item.days.length}}天</view>
+          <view class="plan__arrow {{expandedPlan === item.id ? 'plan__arrow--up' : ''}}">›</view>
+        </view>
+      </view>
+
+      <!-- 展开后的内联编辑区 -->
+      <view class="plan__body" wx:if="{{expandedPlan === item.id}}">
+        <view class="plan__meta-row">
+          <input class="plan__inline-input" placeholder="计划名" placeholder-class="ph" value="{{item.name}}" data-id="{{item.id}}" data-k="name" bindblur="onInlinePlanInput" />
+          <input class="plan__inline-input plan__inline-input--sm" placeholder="简介" placeholder-class="ph" value="{{item.desc}}" data-id="{{item.id}}" data-k="desc" bindblur="onInlinePlanInput" />
+        </view>
+
+        <view class="days-toolbar">
+          <view class="days-toolbar__title">训练日 ({{item.days.length}})</view>
+          <view class="days-toolbar__add" data-id="{{item.id}}" bindtap="onInlineAddDay">＋ 添加</view>
+        </view>
+
+        <view class="inline-days">
+          <view class="inline-day {{editingDay === item.id + '-' + idx ? 'inline-day--active' : ''}}" wx:for="{{item.days}}" wx:for-item="d" wx:for-index="idx" wx:key="idx">
+            <view class="inline-day__head" data-id="{{item.id}}" data-idx="{{idx}}" bindtap="onToggleDay">
+              <view class="inline-day__info">
+                <view class="inline-day__label">{{d.label || '未命名'}}</view>
+                <view class="inline-day__sub">
+                  <text class="inline-day__dow">{{weekdays[d.dayOfWeek].label}}</text>
+                  <text wx:if="{{d.muscle}}" class="inline-day__muscle">· {{d.muscle}}</text>
+                </view>
+              </view>
+              <view class="inline-day__count">{{d.exercises.length}} 动作</view>
+            </view>
+
+            <view class="inline-day__body" wx:if="{{editingDay === item.id + '-' + idx}}">
+              <view class="inline-day__fields">
+                <input class="inline-day__input" placeholder="训练日名 如胸日" placeholder-class="ph" value="{{d.label}}" data-id="{{item.id}}" data-idx="{{idx}}" data-k="label" bindblur="onInlineDayInput" />
+                <view class="inline-day__row">
+                  <picker range="{{weekdays}}" range-key="label" value="{{d.dayOfWeek}}" data-id="{{item.id}}" data-idx="{{idx}}" bindchange="onInlinePickWeekday">
+                    <view class="inline-day__picker">{{weekdays[d.dayOfWeek].label}} ›</view>
+                  </picker>
+                  <input class="inline-day__input inline-day__input--grow" placeholder="肌群ID 如chest" placeholder-class="ph" value="{{d.muscle}}" data-id="{{item.id}}" data-idx="{{idx}}" data-k="muscle" bindblur="onInlineDayInput" />
+                </view>
+              </view>
+
+              <view class="ex-toolbar">
+                <view class="ex-toolbar__title">动作列表</view>
+                <view class="ex-toolbar__btn" data-id="{{item.id}}" data-idx="{{idx}}" bindtap="onOpenExPicker">选择</view>
+              </view>
+
+              <view class="ex-list">
+                <view class="ex-chip-item" wx:for="{{d.exercises}}" wx:for-item="eid" wx:key="*this">
+                  <text class="ex-chip-name">{{planExNames[item.id][eid] || eid}}</text>
+                  <view class="ex-chip-del" data-id="{{item.id}}" data-didx="{{idx}}" data-eid="{{eid}}" bindtap="onRemoveExFromDay">×</view>
+                </view>
+                <view wx:if="{{d.exercises.length === 0}}" class="ex-list__empty">未添加动作，点击"选择"</view>
+              </view>
+
+              <view class="inline-day__danger" data-id="{{item.id}}" data-idx="{{idx}}" bindtap="onInlineDeleteDay">删除此天</view>
+            </view>
+          </view>
+
+          <view wx:if="{{item.days.length === 0}}" class="inline-days__empty">
+            暂无训练日 · 点击"＋ 添加"
+          </view>
+        </view>
+
+        <view class="plan__footer">
+          <view class="plan__footer__btn plan__footer__btn--danger" data-id="{{item.id}}" bindtap="onDeletePlan">删除计划</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{list.length === 0}}" class="empty">
+      <view class="empty__icon">📋</view>
+      <view class="empty__text">暂无自定义计划</view>
+      <view class="empty__hint">点击新建创建你的第一个计划</view>
+    </view>
+  </view>
+
+  <!-- 新建计划简表（只问名字，其余内联编辑） -->
+  <view class="form-mask" wx:if="{{showPlanForm}}" bindtap="onClosePlanForm" catchtouchmove="noop">
+    <view class="form form--mini card" catchtap="noop">
+      <view class="form__title">新建训练计划</view>
+      <view class="field">
+        <view class="field__label">计划名称 *</view>
+        <input class="field__input" placeholder="例如：我的四分化" placeholder-class="ph" value="{{planForm.name}}" data-k="name" bindblur="onPlanInput" maxlength="20" />
+      </view>
+      <view class="field">
+        <view class="field__label">简介（可选）</view>
+        <input class="field__input" placeholder="例如：一周四练" placeholder-class="ph" value="{{planForm.desc}}" data-k="desc" bindblur="onPlanInput" maxlength="30" />
+      </view>
+      <view class="form__actions">
+        <view class="form__btn form__btn--cancel" bindtap="onClosePlanForm">取消</view>
+        <view class="form__btn form__btn--ok" bindtap="onSavePlan">创建</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 动作选择器（唯一保留的弹窗） -->
+  <view class="form-mask" wx:if="{{showExPicker}}" bindtap="onCloseExPicker" catchtouchmove="noop">
+    <view class="form card" catchtap="noop">
+      <view class="form__title">选择动作</view>
+      <view class="ex-search">
+        <input class="ex-search__input" placeholder="搜索动作..." value="{{exSearch}}" bindinput="onExSearch" />
+      </view>
+      <scroll-view scroll-y class="ex-picker-list">
+        <view
+          wx:for="{{exList}}"
+          wx:key="id"
+          class="ex-pick {{exSelected.indexOf(item.id) >= 0 ? 'ex-pick--on' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="onToggleEx"
+        >
+          <view class="ex-pick__info">
+            <view class="ex-pick__name">{{item.name}}</view>
+            <view class="ex-pick__sub">{{item.primary_muscle}} · {{item.equipment}}</view>
+          </view>
+          <view class="ex-pick__check">{{exSelected.indexOf(item.id) >= 0 ? '✓' : ''}}</view>
+        </view>
+        <view wx:if="{{exList.length === 0}}" class="ex-picker-list__empty">未找到动作</view>
+      </scroll-view>
+      <view class="form__actions">
+        <view class="form__btn form__btn--cancel" bindtap="onCloseExPicker">取消</view>
+        <view class="form__btn form__btn--ok" bindtap="onConfirmEx">确认 ({{exSelected.length}})</view>
+      </view>
+    </view>
+  </view>
+</view>

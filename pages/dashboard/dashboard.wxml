@@ -1,0 +1,145 @@
+<view class="page-v2">
+  <!-- 全局固定顶栏 -->
+  <topbar />
+
+  <!-- 骨架屏 -->
+  <block wx:if="{{loading}}">
+    <view class="header">
+      <view class="header__avatar skeleton__shimmer"></view>
+      <view class="header__body">
+        <view class="skeleton__line skeleton__line--short skeleton__shimmer" style="height: 24rpx; width: 200rpx;"></view>
+        <view class="skeleton__line skeleton__line--title skeleton__shimmer" style="height: 32rpx; width: 140rpx; margin-top: 12rpx;"></view>
+      </view>
+      <view class="header__bell skeleton__shimmer"></view>
+    </view>
+    <view class="streak skeleton__shimmer" style="height: 80rpx;"></view>
+    <view class="grid-2" style="margin-top: 24rpx;">
+      <view class="metric-v2 skeleton__shimmer" style="height: 180rpx;" wx:for="{{4}}" wx:key="*this"></view>
+    </view>
+  </block>
+
+  <!-- 正常内容 -->
+  <block wx:else>
+    <!-- ===== 连续坚持 ===== -->
+    <view class="streak">
+      <view class="streak__left">
+        <text class="streak__text">已连续坚持</text>
+        <text class="streak__num">{{streakDays}}</text>
+        <text class="streak__text">天</text>
+      </view>
+      <view class="streak__badge">
+        <text>🔥 {{streakDays}} 天连胜</text>
+      </view>
+    </view>
+
+    <!-- ===== 4 个核心指标 ===== -->
+    <view class="metrics">
+      <!-- 今日消耗 -->
+      <view class="metric-card" bindtap="onGoRecord">
+        <view class="metric-card__head">
+          <view class="metric-card__icon metric-card__icon--fire">🔥</view>
+          <text class="metric-card__title">今日消耗</text>
+        </view>
+        <view class="metric-card__value">
+          <text class="metric-card__num">{{burn}}</text>
+          <text class="metric-card__unit">kcal</text>
+        </view>
+        <view class="progress-v2">
+          <view class="progress-v2__fill" style="width: {{burnPct}}%;"></view>
+        </view>
+        <view class="progress-v2__meta">
+          <text>目标 {{burnGoal}}</text>
+          <text class="progress-v2__pct">{{burnPct}}%</text>
+        </view>
+      </view>
+
+      <!-- 活动时长 -->
+      <view class="metric-card" bindtap="onGoRecord">
+        <view class="metric-card__head">
+          <view class="metric-card__icon metric-card__icon--time">⏱️</view>
+          <text class="metric-card__title">活动时长</text>
+        </view>
+        <view class="metric-card__value">
+          <text class="metric-card__num">{{duration}}</text>
+          <text class="metric-card__unit">min</text>
+        </view>
+        <view class="progress-v2">
+          <view class="progress-v2__fill" style="width: {{durationPct}}%;"></view>
+        </view>
+        <view class="progress-v2__meta">
+          <text>目标 {{durationGoal}}</text>
+          <text class="progress-v2__pct">{{durationPct}}%</text>
+        </view>
+      </view>
+
+      <!-- 步数 -->
+      <view class="metric-card">
+        <view class="metric-card__head">
+          <view class="metric-card__icon metric-card__icon--walk">🚶</view>
+          <text class="metric-card__title">步数</text>
+        </view>
+        <view class="metric-card__value">
+          <text class="metric-card__num">{{steps}}</text>
+          <text class="metric-card__unit">步</text>
+        </view>
+        <view class="progress-v2">
+          <view class="progress-v2__fill" style="width: {{stepsPct}}%;"></view>
+        </view>
+        <view class="progress-v2__meta">
+          <text>目标 {{stepsGoal}}</text>
+          <text class="progress-v2__pct">{{stepsPct}}%</text>
+        </view>
+      </view>
+
+      <!-- 饮水 -->
+      <view class="metric-card" bindtap="onAddWater">
+        <view class="metric-card__head">
+          <view class="metric-card__icon metric-card__icon--water">💧</view>
+          <text class="metric-card__title">饮水</text>
+        </view>
+        <view class="metric-card__value">
+          <text class="metric-card__num">{{water}}</text>
+          <text class="metric-card__unit">L</text>
+        </view>
+        <view class="progress-v2">
+          <view class="progress-v2__fill progress-v2__fill--blue" style="width: {{waterPct}}%;"></view>
+        </view>
+        <view class="progress-v2__meta">
+          <text>目标 {{waterGoal}}</text>
+          <text class="progress-v2__pct">{{waterPct}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ===== 本周训练消耗 ===== -->
+    <view class="section-v2">
+      <view class="section-v2__head">
+        <text class="section-v2__title">本周训练消耗</text>
+      </view>
+      <view class="card-v2">
+        <bar-chart
+          data="{{weekBurnData}}"
+          width="{{670}}"
+          height="{{300}}"
+          bar-color="#80FF00"
+          y-ticks="{{[0, 300]}}"
+        />
+      </view>
+    </view>
+
+    <!-- ===== 下一步训练 ===== -->
+    <view class="section-v2">
+      <view class="next-card">
+        <view class="next-card__icon">🏋️</view>
+        <view class="next-card__body">
+          <text class="next-card__sub">下一次训练 · 周五</text>
+          <text class="next-card__title">肩部 + 核心</text>
+          <text class="next-card__meta">力量 · 55 分钟 · 4 个动作</text>
+        </view>
+        <view class="next-card__btn" bindtap="onGoSchedule">
+          <text>查看日程 →</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

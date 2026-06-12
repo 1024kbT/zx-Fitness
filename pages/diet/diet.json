@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "饮食计划",
+  "navigationBarBackgroundColor": "#0F1014",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0F1014",
+  "backgroundTextStyle": "light",
+  "usingComponents": {
+    "progress-ring": "/components/ui/progress-ring/index",
+    "topbar": "/components/topbar/index"
+  }
+}
