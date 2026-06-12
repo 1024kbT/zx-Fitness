@@ -36,6 +36,16 @@ Component({
     start() {
       if (this.data.running) return;
       this.setData({ running: true });
+      this._runInterval();
+    },
+    // 从指定秒数开始计时（用于 Session 跨页累计时长）
+    startFrom(seconds) {
+      if (this.data.running) this._clear();
+      const init = Math.max(0, Math.floor(seconds || 0));
+      this.setData({ seconds: init, display: formatDuration(init), running: true });
+      this._runInterval();
+    },
+    _runInterval() {
       this._timer = setInterval(() => {
         let next = this.data.seconds;
         if (this.data.mode === 'countdown') {

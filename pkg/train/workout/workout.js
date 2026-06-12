@@ -142,6 +142,19 @@ Page({
 
   onReady() {
     this.timer = this.selectComponent('#mainTimer');
+    // Session 模式下，自动从 globalData 累计时长继续计时
+    if (this.data.isPlanMode && this.data.sessionTotal > 0) {
+      var app = getApp();
+      var elapsed = (app && app.globalData && app.globalData.sessionElapsed) || 0;
+      if (this.timer) {
+        if (elapsed > 0) {
+          this.timer.startFrom(elapsed);
+        } else {
+          this.timer.start();
+        }
+        this.setData({ running: true, duration: elapsed });
+      }
+    }
   },
 
   // 图片加载失败：标记该动作为 imageFailed，回退到 emoji
@@ -158,6 +171,14 @@ Page({
 
   onTick(e) {
     this.setData({ duration: e.detail.seconds });
+    // Session 模式下，每 5 秒回写一次累计时长到 globalData，防止页面重定向丢失
+    if (this.data.isPlanMode && this.data.sessionTotal > 0) {
+      var s = e.detail.seconds || 0;
+      if (s % 5 === 0) {
+        var app = getApp();
+        if (app && app.globalData) app.globalData.sessionElapsed = s;
+      }
+    }
   },
 
   onToggle() {
