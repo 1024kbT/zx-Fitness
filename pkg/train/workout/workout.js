@@ -507,6 +507,10 @@ Page({
   _switchToIndex: function (idx) {
     var app = getApp();
     if (app && app.setCurrentIndex) app.setCurrentIndex(idx);
+    // 跳转前立即保存累计时长，防止 onTick 未触发导致丢失
+    if (app && app.globalData) {
+      app.globalData.sessionElapsed = this.data.duration || 0;
+    }
     var ex = this.data.sessionExercises[idx];
     if (!ex) return;
     var ids = this.data.sessionExercises.map(function (x) { return x.id; }).join(',');

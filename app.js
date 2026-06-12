@@ -8,6 +8,8 @@ App({
     cloudEnv: 'your-cloud-env-id',
     // 训练会话（跨 workout 页跳转保持状态）
     session: null,
+    // 训练会话累计时长（秒），用于跨页继续计时
+    sessionElapsed: 0,
     // 全局状态栏/胶囊安全区（用于自定义导航栏避让）
     statusBarHeight: 20,
     navBarHeight: 64,
@@ -48,6 +50,7 @@ App({
       completed: {},
       startedAt: Date.now()
     };
+    this.globalData.sessionElapsed = 0;
   },
 
   updateSessionExercise: function (id, data) {
