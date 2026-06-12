@@ -63,6 +63,7 @@ App({
 
   clearSession: function () {
     this.globalData.session = null;
+    this.globalData.sessionElapsed = 0;
   },
   onLaunch() {
     // 计算胶囊按钮安全区（最先执行，供后续页面使用）
